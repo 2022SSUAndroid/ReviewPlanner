@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".AddCycle">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,7 +33,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="6"
-                android:text="문제 추가"
+                android:text="복습 주기 설정"
                 android:textStyle="bold"
                 android:textSize="20dp"
                 android:gravity="center"/>
@@ -44,6 +44,7 @@
                 android:layout_margin="10dp"/>
 
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/content"
             android:layout_width="match_parent"
@@ -54,7 +55,7 @@
             android:padding="10dp">
 
             <LinearLayout
-                android:id="@+id/problem_name"
+                android:id="@+id/selected_cycle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -63,40 +64,71 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="문제 이름"
+                    android:text="복습 주기"
                     android:textSize="20dp"
-                    android:textStyle="bold"/>
-                <EditText
-                    android:id="@+id/problem"
+                    android:textStyle="bold"
+                    android:layout_margin="10dp"/>
+                <Button
+                    android:id="@+id/selected"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="문제 이름을 입력하세요."
+                    android:background="@color/btn_gray"
+                    android:text="[cycle-selected]"
                     android:layout_margin="10dp"/>
             </LinearLayout>
+
             <LinearLayout
-                android:id="@+id/select_category"
+                android:id="@+id/cycle_list_area"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="4"
                 android:orientation="vertical"
                 android:layout_margin="10dp">
-                <TextView
+                <LinearLayout
+                    android:id="@+id/cycle_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="카테고리 선택"
-                    android:textSize="20dp"
-                    android:textStyle="bold"
-                    android:layout_margin="10dp"/>
-                <Button
-                    android:id="@+id/add_category"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
                     android:background="@color/btn_gray"
-                    android:text="+ 카테고리 추가"
-                    android:layout_margin="10dp"/>
+                    android:layout_margin="10dp">
+                    <Button
+                        android:id="@+id/cycle1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:background="@color/btn_gray"
+                        android:text="오늘, 1일뒤, 3일뒤, 7일뒤"
+                        android:gravity="left|center_vertical"/>
+                    <Button
+                        android:id="@+id/cycle2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:background="@color/btn_gray"
+                        android:text="오늘, 1일뒤, 3일뒤, 7일뒤, 14일뒤"
+                        android:gravity="left|center_vertical"/>
+                    <Button
+                        android:id="@+id/cycle3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:background="@color/btn_gray"
+                        android:text="오늘, 1일뒤, 3일뒤, 7일뒤, 14일뒤, 30일뒤"
+                        android:gravity="left|center_vertical"/>
+                    <Button
+                        android:id="@+id/select_myself"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:background="@color/btn_gray"
+                        android:text="직접 선택"
+                        android:gravity="left|center_vertical"/>
+                </LinearLayout>
+
             </LinearLayout>
 
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/footer"
             android:layout_width="match_parent"
@@ -116,7 +148,7 @@
                 android:background="#00ff0000"
                 android:text="다음 &gt;"
                 android:textStyle="bold"
-                android:textColor="#FD7424"/>
+                android:textColor="@color/point_color"/>
         </LinearLayout>
 
     </LinearLayout>

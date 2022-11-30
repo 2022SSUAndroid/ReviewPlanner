@@ -12,7 +12,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class AddProblem extends AppCompatActivity implements View.OnClickListener {
 
     Button backView;
     LinearLayout select_category;
