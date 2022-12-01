@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">ReviewPlanner</string>
+    <string name="app_name">Planner</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_signup">signupActivity</string>
+    <string name="title_activity_withdrawal">Withdrawal</string>
+    <string name="title_activity_calender">Calender</string>
 </resources>
