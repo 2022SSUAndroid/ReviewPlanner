@@ -6,4 +6,7 @@
     <string name="title_activity_signup">signupActivity</string>
     <string name="title_activity_withdrawal">Withdrawal</string>
     <string name="title_activity_calender">Calender</string>
+    <string name="title_activity_first_tap_bar">FirstTapBar</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

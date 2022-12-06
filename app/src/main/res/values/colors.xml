@@ -17,4 +17,5 @@
     <color name="point_color">#FD7424</color>
     <color name="primary">#FE8540</color>
     <color name="gray">#EFEFF0</color>
+    <color name="none">#00ff0000</color>
 </resources>
