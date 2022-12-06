@@ -6,4 +6,6 @@
     android:layout_height="?attr/actionBarSize"
     android:background="@color/primary"
     android:elevation="8dp"
-    android:theme="@style/myTheme" />
+    android:theme="@style/myTheme"
+    app:titleTextAppearance="@style/ToolbarTitleText"
+    />

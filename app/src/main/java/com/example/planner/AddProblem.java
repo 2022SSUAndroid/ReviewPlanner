@@ -35,7 +35,7 @@ public class AddProblem extends AppCompatActivity implements View.OnClickListene
         select_category = findViewById(R.id.select_category);
         problem = findViewById(R.id.problem);
         nextView = findViewById(R.id.next);
-        addCategoryView = findViewById(R.id.add_category);
+        //addCategoryView = findViewById(R.id.add_category);
 
 
         category.add("국어");                        // 예시

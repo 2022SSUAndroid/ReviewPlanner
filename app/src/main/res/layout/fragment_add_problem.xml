@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/add_problem_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/problem_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="10dp"
+            android:paddingBottom="30dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="문제 이름"
+                android:textSize="20dp"
+                android:textStyle="bold"/>
+            <EditText
+                android:id="@+id/problem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="문제 이름을 입력하세요."
+                android:inputType="text"
+                android:layout_marginTop="10dp"
+                android:padding="5dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/select_category"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_margin="10dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="카테고리 선택"
+                android:textSize="20dp"
+                android:textStyle="bold"/>
+            <LinearLayout
+                android:id="@+id/category_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="5dp"/>
+            <Button
+                android:id="@+id/add_category_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/gray"
+                android:text="+ 카테고리 추가"
+                android:padding="5dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+        <Button
+            android:id="@+id/next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:background="@color/none"
+            android:text="다음 &gt;"
+            android:textStyle="bold"
+            android:textColor="#FD7424"/>
+    </LinearLayout>
+
+</LinearLayout>

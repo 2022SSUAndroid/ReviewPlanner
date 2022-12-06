@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/review_info"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="15dp"
+    android:paddingBottom="15dp"
+    android:paddingLeft="50dp"
+    android:paddingRight="50dp"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/reviewCnt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingRight="100px"
+        android:textSize="15dp"
+        android:text="1회차"/>
+    <TextView
+        android:id="@+id/reviewTag"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:text="아아"/>
+    <ImageView
+        android:id="@+id/o_image"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:src="@drawable/history_o"
+        android:visibility="visible"/>
+    <ImageView
+        android:id="@+id/x_image"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:src="@drawable/history_x"
+        android:visibility="gone"/>
+
+</LinearLayout>
