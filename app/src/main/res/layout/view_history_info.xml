@@ -15,26 +15,16 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:paddingRight="100px"
-        android:textSize="15dp"
-        android:text="1회차"/>
+        android:textSize="15dp"/>
     <TextView
         android:id="@+id/reviewTag"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_weight="1"
-        android:text="아아"/>
+        android:layout_weight="1"/>
     <ImageView
-        android:id="@+id/o_image"
+        android:id="@+id/imageview"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:src="@drawable/history_o"
-        android:visibility="visible"/>
-    <ImageView
-        android:id="@+id/x_image"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:src="@drawable/history_x"
-        android:visibility="gone"/>
+        android:layout_height="30dp"/>
 
 </LinearLayout>

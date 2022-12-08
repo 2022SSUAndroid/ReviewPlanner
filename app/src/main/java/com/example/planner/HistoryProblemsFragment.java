@@ -105,9 +105,14 @@ public class HistoryProblemsFragment extends Fragment implements View.OnClickLis
         problem1.setReviewCnt(2);
         problem1.addOX(true);
         problem1.addOX(false);
+        problem1.addReviewTag("개념미숙");
+        problem1.addReviewTag("");
+        problem1.addReviewTag("계산실수");
         problem2.setProblemName("문제2");
         problem2.setReviewCnt(1);
         problem2.addOX(false);
+        problem2.addReviewTag("계산실수");
+        problem2.addReviewTag("계산실수");
 
         problemNameList.add(problem1.getProblemName());
         problemNameList.add(problem2.getProblemName());
