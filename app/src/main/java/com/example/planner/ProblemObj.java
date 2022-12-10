@@ -120,4 +120,8 @@ public class ProblemObj implements Serializable {
     public void setReviewTag(List<String> reviewTag) {
         this.reviewTag = reviewTag;
     }
+
+    public void addReviewTag(String reviewTag) {
+        this.reviewTag.add(reviewTag);
+    }
 }

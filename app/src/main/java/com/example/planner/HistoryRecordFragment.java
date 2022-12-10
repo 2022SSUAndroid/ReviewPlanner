@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +33,9 @@ public class HistoryRecordFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    RecyclerView recyclerView;
+    HistoryRecyclerViewAdapter adapter;
 
     ProblemObj selectedProblem = new ProblemObj();
 
@@ -78,38 +83,12 @@ public class HistoryRecordFragment extends Fragment {
 
         if (getArguments() != null) {
             selectedProblem = (ProblemObj) getArguments().getSerializable("problem");
-            LinearLayout historyOX = view.findViewById(R.id.history_ox);
 
-            // 자꾸 꺼짐. 디버깅 필요.
-            for (int i = 0; i < selectedProblem.getReviewCnt(); i++) {
-                LinearLayout infoLinear = view.findViewById(R.id.review_info);
-                TextView cntText = view.findViewById(R.id.reviewCnt);
-                TextView reviewTag = view.findViewById(R.id.reviewTag);
-                ImageView oImage = view.findViewById(R.id.o_image);
-                ImageView xImage = view.findViewById(R.id.x_image);
+            recyclerView = view.findViewById(R.id.recycler);
+            adapter = new HistoryRecyclerViewAdapter(getActivity(), selectedProblem.getOX(), selectedProblem.getReviewTag());
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL,false));
 
-                if (i == 0) {
-                    cntText.setText("처음 ");
-                } else {
-                    cntText.setText(i + "회차");
-                }
-                infoLinear.addView(cntText);
-
-                reviewTag.setText(selectedProblem.getReviewTag().get(i));
-                infoLinear.addView(reviewTag);
-
-                if (selectedProblem.getOX().get(i) == true) {
-                    oImage.setVisibility(View.VISIBLE);
-                    xImage.setVisibility(View.GONE);
-                    infoLinear.addView(oImage);
-                } else {
-                    oImage.setVisibility(View.GONE);
-                    xImage.setVisibility(View.VISIBLE);
-                    infoLinear.addView(xImage);
-                }
-
-                historyOX.addView(infoLinear);
-            }
         }
 
 

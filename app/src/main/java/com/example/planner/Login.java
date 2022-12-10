@@ -72,7 +72,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         }
 
         if (view == signupBtn) {
-            // 회원가입 뷰로 이동
+            Intent intent = new Intent(this, Signup.class);
+            startActivity(intent);
         }
     }
 
