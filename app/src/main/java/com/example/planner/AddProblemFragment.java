@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class AddProblemFragment extends Fragment implements View.OnClickListener
 
     LinearLayout category_list;
     EditText problem;
+    TextView categoryView;
     Button nextView;
     Button addCategoryBtn;
     ProblemObj problemObj = new ProblemObj();
@@ -103,6 +105,7 @@ public class AddProblemFragment extends Fragment implements View.OnClickListener
 
         category_list = view.findViewById(R.id.category_list);
         problem = view.findViewById(R.id.problem);
+        categoryView = view.findViewById(R.id.category);
         nextView = view.findViewById(R.id.next);
         addCategoryBtn = view.findViewById(R.id.add_category_btn);
 
@@ -134,6 +137,8 @@ public class AddProblemFragment extends Fragment implements View.OnClickListener
                 public void onButtonClick(String input) {
                     if (input != "") {
                         newCategory = input;
+                        problemObj.setCategory(newCategory);
+                        categoryView.setText("카테고리 선택 : " + problemObj.getCategory());
                         Button btn = new Button(getActivity());
                         btn.setText(newCategory);
                         btn.setOnClickListener(new View.OnClickListener() {
@@ -153,6 +158,7 @@ public class AddProblemFragment extends Fragment implements View.OnClickListener
         } else if (categoryBtn.contains(view)) {  // 카테고리 선택 시 내부 동작 구현 필요
             int idx = categoryBtn.indexOf(view);
             problemObj.setCategory(String.valueOf(categoryBtn.get(idx).getText()));
+            categoryView.setText("카테고리 선택 : " + problemObj.getCategory());
             /**
              * 아래 토스트는 선택이 제대로 됐는지 확인을 위한 것임.
              * 선택한 버튼의 텍스트(카테고리 이름)에 해당하는 카테고리에 문제가 저장되도록 하면 됨.
