@@ -133,8 +133,10 @@ public class AddCycleFragment extends Fragment implements View.OnClickListener{
             while(iterator.hasNext()) {
                 Log.d("problemObj", "reviewDay : " + iterator.next().toString());
             }
+            Bundle result = new Bundle();
+            result.putSerializable("bundleKey", problemObj);
+            getParentFragmentManager().setFragmentResult("requestKey", result);
 
-            // 다음으로 가기 구현해야 함 (지우가 만든 문제,사진 올리는 액티비티로 problemObj 전달하면서 화면 전환)
             getParentFragmentManager().beginTransaction().replace(R.id.add_problem_fragment_container, ReviewFragment.newInstance("param1", "param2")).addToBackStack(null).commit();
 
         } else if (view == selectMyselfView) {

@@ -2,7 +2,9 @@ package com.example.planner;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +28,7 @@ public class ReviewFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    ProblemObj problemObj = new ProblemObj();
     TextView btn_next;
 
     public ReviewFragment() {
@@ -62,6 +65,12 @@ public class ReviewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getParentFragmentManager().setFragmentResultListener("requestKey", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                problemObj = (ProblemObj) result.getSerializable("bundleKey");
+            }
+        });
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_review, container, false);
 
