@@ -1,10 +1,13 @@
 package com.example.planner;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +45,8 @@ public class AddProblemFragment extends Fragment implements View.OnClickListener
     List<String> category;
     List<Button> categoryBtn;
 
+    String newCategory = "";
+
     public AddProblemFragment() {
         // Required empty public constructor
     }
@@ -71,6 +76,15 @@ public class AddProblemFragment extends Fragment implements View.OnClickListener
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        getChildFragmentManager().setFragmentResultListener("requestKeyForPlaces", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                // We use a String here, but any type that can be put in a Bundle is supported
+                String newCategory = result.getString("bundleKey");
+                // Do something with the result...
+                Toast.makeText(getActivity(), "newCategory", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -105,6 +119,7 @@ public class AddProblemFragment extends Fragment implements View.OnClickListener
             category_list.addView(btn);
         }
 
+        addCategoryBtn.setOnClickListener(this);
         nextView.setOnClickListener(this);
     }
 
@@ -112,6 +127,28 @@ public class AddProblemFragment extends Fragment implements View.OnClickListener
     public void onClick(View view) {
         if (view == addCategoryBtn) {
             // 직접선택 구현해야 함
+            Toast.makeText(getActivity(), "직접선택", Toast.LENGTH_SHORT).show();
+            DialogFragmentNewCategory dialog = new DialogFragmentNewCategory();
+            dialog.setFragmentInterfacer(new DialogFragmentNewCategory.MyFragmentInterfacer() {
+                @Override
+                public void onButtonClick(String input) {
+                    if (input != "") {
+                        newCategory = input;
+                        Button btn = new Button(getActivity());
+                        btn.setText(newCategory);
+                        btn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                problemObj.setCategory(newCategory);
+                                Toast.makeText(getActivity(), "선택한 카테고리는 " + newCategory, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        categoryBtn.add(btn);
+                        category_list.addView(btn);
+                    }
+                }
+            });
+            dialog.show(getParentFragmentManager(), null);
 
         } else if (categoryBtn.contains(view)) {  // 카테고리 선택 시 내부 동작 구현 필요
             int idx = categoryBtn.indexOf(view);

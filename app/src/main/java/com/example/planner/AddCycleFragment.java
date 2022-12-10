@@ -1,5 +1,6 @@
 package com.example.planner;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,6 +45,8 @@ public class AddCycleFragment extends Fragment implements View.OnClickListener{
     Button selectMyselfView;
     Button nextView;
     ProblemObj problemObj = new ProblemObj();
+
+    List<Integer> myCycle = new ArrayList<>();
 
     public AddCycleFragment() {
         // Required empty public constructor
@@ -132,20 +136,29 @@ public class AddCycleFragment extends Fragment implements View.OnClickListener{
             // 다음으로 가기 구현해야 함 (지우가 만든 문제,사진 올리는 액티비티로 problemObj 전달하면서 화면 전환)
 
         } else if (view == selectMyselfView) {
-            // 직접 선택 부분 구현해야 함
-            List<Integer> myCycle = new ArrayList<>();
-            /* 아래 1줄은 임시코드 */
-            myCycle = Arrays.asList(1, 3, 5, 7, 9);
+            DialogFragmentMyCycle dialog = new DialogFragmentMyCycle();
+            dialog.setFragmentInterface(new DialogFragmentMyCycle.MyFragmentInterface() {
+                @Override
+                public void onButtonClick(List<Integer> input) {
+                    if (input.size() != 0) {
+                        myCycle = input;
+                        for (int k = 0; k < input.size(); k++) {
+                            Log.i("tkdlzmf", input.get(k).toString());
+                        }
+                        StringBuilder cycleStr = new StringBuilder();
+                        for (int i = 0; i < myCycle.size(); i++) {
+                            if (i != myCycle.size() - 1)
+                                cycleStr.append(myCycle.get(i) + "일뒤, ");
+                            else
+                                cycleStr.append(myCycle.get(i) + "일뒤");
+                        }
+                        problemObj.setCycle(myCycle);
+                        selectedView.setText(cycleStr);
+                    }
+                }
+            });
+            dialog.show(getParentFragmentManager(), null);
 
-            StringBuilder cycleStr = new StringBuilder();
-            for (int i = 0; i < myCycle.size(); i++) {
-                if (i != myCycle.size() - 1)
-                    cycleStr.append(myCycle.get(i) + "일뒤, ");
-                else
-                    cycleStr.append(myCycle.get(i) + "일뒤");
-            }
-            problemObj.setCycle(myCycle);
-            selectedView.setText(cycleStr);
         } else if (view == cycle1View) {
             selectedView.setText(cycle1View.getText());
             List<Integer> cycle1 = Arrays.asList(0, 1, 3, 7);
