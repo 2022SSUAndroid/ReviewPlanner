@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/register_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -70,40 +71,40 @@
             android:layout_weight="3"
             android:orientation="vertical">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginVertical="0dp"
-            android:background="@color/gray"
-            android:paddingHorizontal="130dp"
-            android:paddingVertical="15dp"
-            android:text="건너뛰기"
-            android:textColor="@color/black" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginVertical="0dp"
+                android:background="@color/gray"
+                android:paddingHorizontal="130dp"
+                android:paddingVertical="15dp"
+                android:text="건너뛰기"
+                android:textColor="@color/black" />
         </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="9">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="9">
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
-            android:layout_gravity="center"
-            android:layout_centerHorizontal="true"
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:layout_gravity="center"
+                android:layout_centerHorizontal="true"
 
-            android:src="@mipmap/ic_launcher" />
+                android:src="@mipmap/ic_launcher" />
 
-    </RelativeLayout>
+        </RelativeLayout>
 
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="70dp"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:gravity="end|center"-->
-<!--        >-->
+        <!--    <LinearLayout-->
+        <!--        android:layout_width="match_parent"-->
+        <!--        android:layout_height="70dp"-->
+        <!--        android:orientation="horizontal"-->
+        <!--        android:gravity="end|center"-->
+        <!--        >-->
 
         <LinearLayout
             android:id="@+id/footer"

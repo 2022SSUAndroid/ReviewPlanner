@@ -110,6 +110,7 @@ public class ProblemObj implements Serializable {
 
     public void addOX(Boolean tf) {
         this.ox.add(tf);
+        reviewCnt++;
     }
 
     public List<String> getReviewTag() {

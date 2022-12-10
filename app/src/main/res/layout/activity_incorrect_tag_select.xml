@@ -42,7 +42,6 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:orientation="horizontal"
-        android:background="@color/gray"
         android:gravity="end|center"
         android:layout_weight="1"
         >
