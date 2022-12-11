@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -19,11 +18,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 
+
 public class Signup extends AppCompatActivity {
     private static final String TAG = "EmailPassword";
 
     TextView back;
-    EditText nickname, id, pw, pw2, emailEdit;
+    EditText nickname, pw, pw2, emailEdit;
     Button pwCheck, submit;
     Boolean emailOK = false;
     Boolean pwdOK = false;
@@ -41,7 +41,6 @@ public class Signup extends AppCompatActivity {
         back.setOnClickListener(v -> onBackPressed());
 
         nickname = findViewById(R.id.signNickname);
-        id = findViewById(R.id.signID);
         pw = findViewById(R.id.signPW);
         pw2 = findViewById(R.id.signPW2);
         emailEdit = findViewById(R.id.signmail);
@@ -57,7 +56,7 @@ public class Signup extends AppCompatActivity {
 
         submit = findViewById(R.id.signupbutton);
         submit.setOnClickListener(v -> {
-            if (emailEdit.getText().toString() == "") {
+            if (emailEdit.getText().toString().equals("")) {
                 Toast.makeText(this, "이메일을 입력하세요", Toast.LENGTH_SHORT).show();
                 return;
             } else if (!pwdOK) {
