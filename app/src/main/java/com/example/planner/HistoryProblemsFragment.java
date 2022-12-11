@@ -124,12 +124,6 @@ public class HistoryProblemsFragment extends Fragment implements View.OnClickLis
                 }
             }
         });
-
-
-        // 문제 리스트에서 문제 이름으로 버튼 뷰 주르륵 만들기
-
-        // 각 버튼별로 클릭리스너 달고 클릭되면 클릭된 문제 객체를 다음 페이지로 넘김
-
     }
 
     @Override

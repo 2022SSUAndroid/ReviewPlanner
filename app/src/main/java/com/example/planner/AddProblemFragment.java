@@ -9,6 +9,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,18 +115,22 @@ public class AddProblemFragment extends Fragment implements View.OnClickListener
         nextView = view.findViewById(R.id.next);
         addCategoryBtn = view.findViewById(R.id.add_category_btn);
 
-        /**
-         * category List 파이어베이스에서 가져와야 함
-         */
-        category.add("국어");                        // 예시
-        category.add("수학");                        // 예시
-        for (int i = 0; i < category.size(); i++) {
-            Button btn = new Button(getActivity());
-            btn.setText(category.get(i));
-            btn.setOnClickListener(this);
-            categoryBtn.add(btn);
-            category_list.addView(btn);
-        }
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = user.getUid();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.document("user/" + uid).get().addOnCompleteListener(task -> {
+            if(task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                category = (List) document.get("categories");
+                for (int i = 0; i < category.size(); i++) {
+                    Button btn = new Button(getActivity());
+                    btn.setText(category.get(i));
+                    btn.setOnClickListener(this);
+                    categoryBtn.add(btn);
+                    category_list.addView(btn);
+                }
+            }
+        });
 
         addCategoryBtn.setOnClickListener(this);
         nextView.setOnClickListener(this);
@@ -136,6 +146,10 @@ public class AddProblemFragment extends Fragment implements View.OnClickListener
                 @Override
                 public void onButtonClick(String input) {
                     if (input != "") {
+                        if (category.contains(input)) {
+                            Toast.makeText(getActivity(), "이미 존재하는 카테고리입니다.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         newCategory = input;
                         problemObj.setCategory(newCategory);
                         categoryView.setText("카테고리 선택 : " + problemObj.getCategory());
@@ -171,7 +185,7 @@ public class AddProblemFragment extends Fragment implements View.OnClickListener
                 Toast.makeText(getActivity(), "카테고리를 선택하세요.", Toast.LENGTH_SHORT).show();
             }
             else{
-                problemObj.setProblemName(String.valueOf(problem.getText()));
+                problemObj.setProblemName(problem.getText().toString());
                 // 아래 토스트는 확인용 (나중에 삭제해야 함)
                 Toast.makeText(getActivity(), "문제 이름 : " + problemObj.getProblemName() + "\n카테고리 : " + problemObj.getCategory(), Toast.LENGTH_SHORT).show();
                 Bundle result = new Bundle();

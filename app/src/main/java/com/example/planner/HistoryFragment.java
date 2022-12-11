@@ -43,7 +43,7 @@ public class HistoryFragment extends Fragment implements View.OnClickListener{
     private String mParam2;
 
     LinearLayout historyCategoryLinear;
-    ArrayList<String> categories = new ArrayList<>();
+    List<String> categories = new ArrayList<>();
     List<Button> buttons = new ArrayList<>();
     String selectedCategory;
 
@@ -96,20 +96,13 @@ public class HistoryFragment extends Fragment implements View.OnClickListener{
         db.document("user/" + uid).get().addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
-                ArrayList arr = (ArrayList) document.get("categories");
-                for (int i = 0; i < arr.size(); i++) {
-                    Log.i("rerere", arr.get(i).toString());
-                    categories.add(arr.get(i).toString());
-                }
+                categories = (List) document.get("categories");
                 for (int i = 0; i < categories.size(); i++) {
                     Button btn = new Button(getActivity());
                     btn.setText(categories.get(i));
                     btn.setOnClickListener(this);
                     buttons.add(btn);
-                }
-
-                for (int i = 0; i < buttons.size(); i++) {
-                    historyCategoryLinear.addView(buttons.get(i));
+                    historyCategoryLinear.addView(btn);
                 }
             }
         });
