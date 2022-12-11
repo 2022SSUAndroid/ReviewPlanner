@@ -16,9 +16,16 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,9 +46,9 @@ public class HistoryProblemsFragment extends Fragment implements View.OnClickLis
     String selectedCategory = "";
     List<String> problemNameList;
     List<Button> buttons;
-    HashMap<String, ProblemObj> problems;
+    HashMap<String, Map> problems;
     LinearLayout historyProblemsLinear;
-    ProblemObj selectedProblem = new ProblemObj();
+    Map selectedProblem = new HashMap<>();
 
     public HistoryProblemsFragment() {
         // Required empty public constructor
@@ -99,34 +106,26 @@ public class HistoryProblemsFragment extends Fragment implements View.OnClickLis
         historyProblemsLinear = view.findViewById(R.id.history_problems_linear);
 
         // 파이어베이스에서 카테고리가 selectedCategory인 컬렉션에 들어가서 문제 해시맵<이름, 객체>로 가져오기
-        ProblemObj problem1 = new ProblemObj();
-        ProblemObj problem2 = new ProblemObj();
-        problem1.setProblemName("문제1");
-        problem1.setReviewCnt(2);
-        problem1.addOX(true);
-        problem1.addOX(false);
-        problem1.addReviewTag("개념미숙");
-        problem1.addReviewTag("");
-        problem1.addReviewTag("계산실수");
-        problem2.setProblemName("문제2");
-        problem2.setReviewCnt(1);
-        problem2.addOX(false);
-        problem2.addReviewTag("계산실수");
-        problem2.addReviewTag("계산실수");
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = user.getUid();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("user/" + uid + "/" + selectedCategory).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    problemNameList.add(document.getId());
+                    problems.put(document.getId(), document.getData());
+                }
+                for (int i = 0; i < problemNameList.size(); i++) {
+                    Button btn = new Button(getActivity());
+                    btn.setText(problemNameList.get(i));
+                    btn.setOnClickListener(this);
+                    historyProblemsLinear.addView(btn);
+                    buttons.add(btn);
+                }
+            }
+        });
 
-        problemNameList.add(problem1.getProblemName());
-        problemNameList.add(problem2.getProblemName());
-        problems.put(problem1.getProblemName(), problem1);
-        problems.put(problem2.getProblemName(), problem2);
-        // 위의 코드들은 임시 코드임
 
-        for (int i = 0; i < problemNameList.size(); i++) {
-            Button btn = new Button(getActivity());
-            btn.setText(problemNameList.get(i));
-            btn.setOnClickListener(this);
-            historyProblemsLinear.addView(btn);
-            buttons.add(btn);
-        }
         // 문제 리스트에서 문제 이름으로 버튼 뷰 주르륵 만들기
 
         // 각 버튼별로 클릭리스너 달고 클릭되면 클릭된 문제 객체를 다음 페이지로 넘김
@@ -143,10 +142,9 @@ public class HistoryProblemsFragment extends Fragment implements View.OnClickLis
             }
         }
 
-        Log.d("선택", selectedProblem.getProblemName());
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable("problem", selectedProblem);
+        bundle.putSerializable("problem", (Serializable) selectedProblem);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         HistoryRecordFragment historyOXFragment = new HistoryRecordFragment();
         historyOXFragment.setArguments(bundle);
