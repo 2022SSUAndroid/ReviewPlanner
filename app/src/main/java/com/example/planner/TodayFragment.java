@@ -22,7 +22,7 @@ public class TodayFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    public static TodayFragment newInstance(String param1, String param2) {
+    public static TodayFragment newInstance() {
         TodayFragment fragment = new TodayFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);

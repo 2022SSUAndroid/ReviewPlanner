@@ -22,7 +22,6 @@
         <activity
             android:name=".AddProblemActivity"
             android:exported="true">
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -79,8 +78,6 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
-
         <activity
             android:name=".MainActivity"
             android:exported="true">
