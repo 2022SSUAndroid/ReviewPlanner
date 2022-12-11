@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
         NavigationBarView navigationBarView = findViewById(R.id.bottom_navigation);
 
-        transferTo(TodayFragment.newInstance("param1", "param2"));
+        transferTo(TodayFragment.newInstance());
 
 
         navigationBarView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -40,10 +40,10 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.page_1:// Respond to navigation item 1 click
-                        transferTo(TodayFragment.newInstance("param1", "param2"));
+                        transferTo(TodayFragment.newInstance());
                         return true;
                     case R.id.page_2:// Respond to navigation item 2 click
-                        transferTo(CalenderFragment.newInstance("param1", "param2"));
+                        transferTo(CalenderFragment.newInstance());
                         return true;
                     case R.id.page_3:// Respond to navigation item 3 click
                         transferTo(HistoryFragment.newInstance("param1", "param2"));
