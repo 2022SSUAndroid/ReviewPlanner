@@ -12,10 +12,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -34,10 +39,13 @@ public class HistoryRecordFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    TextView problemName;
+    Button problemBtn;
+
     RecyclerView recyclerView;
     HistoryRecyclerViewAdapter adapter;
 
-    ProblemObj selectedProblem = new ProblemObj();
+    Map selectedProblem = new HashMap<>();
 
     public HistoryRecordFragment() {
         // Required empty public constructor
@@ -82,20 +90,17 @@ public class HistoryRecordFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         if (getArguments() != null) {
-            selectedProblem = (ProblemObj) getArguments().getSerializable("problem");
+            selectedProblem = (Map) getArguments().getSerializable("problem");
 
+            problemName = view.findViewById(R.id.problem_name_text);
+            problemBtn = view.findViewById(R.id.problem_img_btn);
             recyclerView = view.findViewById(R.id.recycler);
-            adapter = new HistoryRecyclerViewAdapter(getActivity(), selectedProblem.getOX(), selectedProblem.getReviewTag());
+
+            problemName.setText((String) selectedProblem.get("problemName"));
+
+            adapter = new HistoryRecyclerViewAdapter(getActivity(), selectedProblem);
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL,false));
-
         }
-
-
-
-        Toast.makeText(getActivity(), selectedProblem.getProblemName() + selectedProblem.getReviewCnt(), Toast.LENGTH_SHORT).show();
-        Log.d("선택된 문제 정보 :", "이름" + selectedProblem.getProblemName());
-        Log.d("선택된 문제 정보 :", "복습횟수" + selectedProblem.getReviewCnt());
-        Log.d("선택된 문제 정보 :", "오답여부" + selectedProblem.getOX());
     }
 }

@@ -5,13 +5,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+import java.util.Map;
 
 public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter {
     String TAG = "RecyclerViewAdapter";
@@ -23,9 +26,9 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter {
     Context context;
 
     //생성자를 통하여 데이터 리스트 context를 받음
-    public HistoryRecyclerViewAdapter(Context context, List<Boolean> ox, List<String> reviewTag){
-        this.ox = ox;
-        this.reviewTag = reviewTag;
+    public HistoryRecyclerViewAdapter(Context context, Map selectedProblem){
+        this.ox = (List<Boolean>) selectedProblem.get("ox");
+        this.reviewTag = (List<String>) selectedProblem.get("reviewTag");
         this.context = context;
     }
 

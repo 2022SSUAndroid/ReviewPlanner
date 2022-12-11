@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,14 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,20 +90,22 @@ public class HistoryFragment extends Fragment implements View.OnClickListener{
         super.onViewCreated(view, savedInstanceState);
         historyCategoryLinear = view.findViewById(R.id.history_category_linear);
 
-        // 파이어베이스에서 categories 리스트로 가저올 예정
-        categories.add("수학");
-        categories.add("영어");
-
-        for (int i = 0; i < categories.size(); i++) {
-            Button btn = new Button(getActivity());
-            btn.setText(categories.get(i));
-            btn.setOnClickListener(this);
-            buttons.add(btn);
-        }
-
-        for (int i = 0; i < buttons.size(); i++) {
-            historyCategoryLinear.addView(buttons.get(i));
-        }
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = user.getUid();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.document("user/" + uid).get().addOnCompleteListener(task -> {
+            if(task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                categories = (List) document.get("categories");
+                for (int i = 0; i < categories.size(); i++) {
+                    Button btn = new Button(getActivity());
+                    btn.setText(categories.get(i));
+                    btn.setOnClickListener(this);
+                    buttons.add(btn);
+                    historyCategoryLinear.addView(btn);
+                }
+            }
+        });
     }
 
     @Override

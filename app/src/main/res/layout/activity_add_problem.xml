@@ -5,12 +5,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
+    <include
+        layout="@layout/toolbar"
+        android:id="@+id/toolbar" />
 
     <FrameLayout
         android:id="@+id/add_problem_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:padding="20dp"/>
 
 </LinearLayout>
