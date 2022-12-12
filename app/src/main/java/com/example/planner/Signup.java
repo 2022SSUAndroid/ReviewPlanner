@@ -51,7 +51,9 @@ public class Signup extends AppCompatActivity {
         emailEdit = findViewById(R.id.signmail);
         pwCheck = findViewById(R.id.pwcheckbutton);
         pwCheck.setOnClickListener(v -> {
-            if (pw.getText().toString().equals(pw2.getText().toString())) {
+            if (pw.getText().toString().length() < 6) {
+                Toast.makeText(this, "비밀번호는 6자 이상이어야합니다.", Toast.LENGTH_SHORT).show();
+            } else if (pw.getText().toString().equals(pw2.getText().toString())) {
                 pwCheck.setText("일치");
                 pwdOK = true;
             } else {
@@ -61,6 +63,10 @@ public class Signup extends AppCompatActivity {
 
         submit = findViewById(R.id.signupbutton);
         submit.setOnClickListener(v -> {
+            if (!pw.getText().toString().equals(pw2.getText().toString())) {
+                pwCheck.setText("확인");
+                pwdOK = false;
+            }
             if (emailEdit.getText().toString() == "") {
                 Toast.makeText(this, "이메일을 입력하세요", Toast.LENGTH_SHORT).show();
                 return;

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -97,12 +98,19 @@ public class HistoryFragment extends Fragment implements View.OnClickListener{
             if(task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 categories = (List) document.get("categories");
-                for (int i = 0; i < categories.size(); i++) {
-                    Button btn = new Button(getActivity());
-                    btn.setText(categories.get(i));
-                    btn.setOnClickListener(this);
-                    buttons.add(btn);
-                    historyCategoryLinear.addView(btn);
+                if (categories == null) {
+                    TextView tv = new TextView(getContext());
+                    tv.setText("등록된 문제가 없습니다");
+                    historyCategoryLinear.addView(tv);
+                }
+                if (categories != null) {
+                    for (int i = 0; i < categories.size(); i++) {
+                        Button btn = new Button(getActivity());
+                        btn.setText(categories.get(i));
+                        btn.setOnClickListener(this);
+                        buttons.add(btn);
+                        historyCategoryLinear.addView(btn);
+                    }
                 }
             }
         });

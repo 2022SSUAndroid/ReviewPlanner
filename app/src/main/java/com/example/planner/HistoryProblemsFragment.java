@@ -7,6 +7,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,7 +34,7 @@ import java.util.Map;
  * Use the {@link HistoryProblemsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HistoryProblemsFragment extends Fragment implements View.OnClickListener{
+public class HistoryProblemsFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -47,8 +49,10 @@ public class HistoryProblemsFragment extends Fragment implements View.OnClickLis
     List<String> problemNameList;
     List<Button> buttons;
     HashMap<String, Map> problems;
-    LinearLayout historyProblemsLinear;
     Map selectedProblem = new HashMap<>();
+
+    RecyclerView recyclerView;
+    HistoryProblemRecyclerAdapter adapter;
 
     public HistoryProblemsFragment() {
         // Required empty public constructor
@@ -103,8 +107,6 @@ public class HistoryProblemsFragment extends Fragment implements View.OnClickLis
         // 전달받은 카테고리 확인용 토스트
         Toast.makeText(getActivity(), "선택된 카테고리는" + selectedCategory, Toast.LENGTH_SHORT).show();
 
-        historyProblemsLinear = view.findViewById(R.id.history_problems_linear);
-
         // 파이어베이스에서 카테고리가 selectedCategory인 컬렉션에 들어가서 문제 해시맵<이름, 객체>로 가져오기
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String uid = user.getUid();
@@ -115,35 +117,14 @@ public class HistoryProblemsFragment extends Fragment implements View.OnClickLis
                     problemNameList.add(document.getId());
                     problems.put(document.getId(), document.getData());
                 }
-                for (int i = 0; i < problemNameList.size(); i++) {
-                    Button btn = new Button(getActivity());
-                    btn.setText(problemNameList.get(i));
-                    btn.setOnClickListener(this);
-                    historyProblemsLinear.addView(btn);
-                    buttons.add(btn);
-                }
+
+
+                recyclerView = view.findViewById(R.id.recycler_problems);
+                adapter = new HistoryProblemRecyclerAdapter(getActivity(), problemNameList, problems);
+                recyclerView.setAdapter(adapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL,false));
+
             }
         });
-    }
-
-    @Override
-    public void onClick(View view) {
-        for (int i = 0; i < buttons.size(); i++) {
-            if (view == buttons.get(i)) {
-                String selectedProblemName = buttons.get(i).getText().toString();
-                selectedProblem = problems.get(selectedProblemName);
-                break;
-            }
-        }
-
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("problem", (Serializable) selectedProblem);
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        HistoryRecordFragment historyOXFragment = new HistoryRecordFragment();
-        historyOXFragment.setArguments(bundle);
-        transaction.addToBackStack(null);
-        transaction.replace(R.id.fragment_container, historyOXFragment);
-        transaction.commit();
     }
 }

@@ -1,6 +1,7 @@
 package com.example.planner;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,6 +77,10 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter {
         } else {
             myViewHolder.imageView.setImageResource(R.drawable.history_x);
         }
+        /**
+         * 임시 이미지
+         */
+        myViewHolder.mysolution.setImageResource(R.drawable.camera);
     }
 
 
@@ -84,11 +89,24 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter {
         TextView textViewTag;
         TextView textViewCnt;
         ImageView imageView;
+        ImageView mysolution;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewCnt = itemView.findViewById(R.id.reviewCnt);
             textViewTag =  itemView.findViewById(R.id.reviewTag);
             imageView = itemView.findViewById(R.id.imageview);
+            mysolution = itemView.findViewById(R.id.show_mysolution);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(mysolution.getVisibility() == View.GONE) {
+                        mysolution.setVisibility(View.VISIBLE);
+                    } else {
+                        mysolution.setVisibility(View.GONE);
+                    }
+                }
+            });
         }
     }
 }
