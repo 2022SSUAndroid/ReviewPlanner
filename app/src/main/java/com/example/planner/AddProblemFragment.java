@@ -122,12 +122,14 @@ public class AddProblemFragment extends Fragment implements View.OnClickListener
             if(task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 category = (List) document.get("categories");
-                for (int i = 0; i < category.size(); i++) {
-                    Button btn = new Button(getActivity());
-                    btn.setText(category.get(i));
-                    btn.setOnClickListener(this);
-                    categoryBtn.add(btn);
-                    category_list.addView(btn);
+                if (category != null) {
+                    for (int i = 0; i < category.size(); i++) {
+                        Button btn = new Button(getActivity());
+                        btn.setText(category.get(i));
+                        btn.setOnClickListener(this);
+                        categoryBtn.add(btn);
+                        category_list.addView(btn);
+                    }
                 }
             }
         });
