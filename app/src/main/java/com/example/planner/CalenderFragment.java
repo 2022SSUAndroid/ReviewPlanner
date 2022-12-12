@@ -6,18 +6,32 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
+import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+
+import com.google.android.gms.gcm.Task;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class CalenderFragment extends Fragment {
 
-    public String readDay = null;
-    public String str = null;
     public CalendarView calendarView;
     public TextView diaryTextView;
+
+    ArrayList<Category> categories;
+    ListView customListView;
+    private static CustomAdapter customAdapter;
+
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     public CalenderFragment() {
 
@@ -38,7 +52,10 @@ public class CalenderFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_calender, container, false);
+
+        View rootView = inflater.inflate(R.layout.fragment_calender, container, false);
+        customListView = (ListView) rootView.findViewById(R.id.calendar_list);
+        return rootView;
     }
 
     @Override
@@ -55,34 +72,29 @@ public class CalenderFragment extends Fragment {
             {
                 diaryTextView.setVisibility(View.VISIBLE);
                 diaryTextView.setText(String.format("%d / %d / %d", year, month + 1, dayOfMonth));
-//                LoadProblems(year, month, dayOfMonth);
+                LoadProblems(year, month, dayOfMonth);
             }
         });
     }
 
-//    public void LoadProblems(int cYear, int cMonth, int cDay)
-//    {
-//        readDay = "" + cYear + "-" + (cMonth + 1) + "" + "-" + cDay + ".txt";
-//        FileInputStream fis;
+    public void LoadProblems(int year, int month, int dayOfMonth)
+    {
+        String day = "" + year + (month + 1) + "" + dayOfMonth;
+
+//        categories = new ArrayList<>();
 //
-//        try
-//        {
-//            fis = openFileInput(readDay);
 //
-//            byte[] fileData = new byte[fis.available()];
-//            fis.read(fileData);
-//            fis.close();
+//        categories.add(new Category("영어", "2문제/4문제"));
+//        categories.add(new Category("수학", "1문제/3문제"));
+//        categories.add(new Category("정보", "1문제/5문제"));
 //
-//            str = new String(fileData);
 //
-//            textView2.setVisibility(View.VISIBLE);
-//            textView2.setText(str);
-//        }
-//        catch (Exception e)
-//        {
-//            e.printStackTrace();
-//        }
-//    }
+//        customAdapter = new CustomAdapter(getContext(), categories);
+//        customListView.setAdapter(customAdapter);
+
+    }
+
+
 }
 
 
