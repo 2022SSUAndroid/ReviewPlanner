@@ -256,8 +256,8 @@ public class SolvingRegisterFragment extends Fragment {
 
 
                 //NEXT VIEW
-                Intent intent = new Intent(getActivity(),MainActivity.class); //fragment라서 activity intent와는 다른 방식
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                Intent intent = new Intent(getActivity(),MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
 
 

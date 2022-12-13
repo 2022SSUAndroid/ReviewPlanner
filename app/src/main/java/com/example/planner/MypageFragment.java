@@ -11,9 +11,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,7 +38,11 @@ public class MypageFragment extends Fragment implements View.OnClickListener {
     private String mParam1;
     private String mParam2;
 
+    FirebaseAuth mAuth;
+    String name;
+    TextView myName;
     Button logoutBtn;
+    Button withdraw;
 
     public MypageFragment() {
         // Required empty public constructor
@@ -75,8 +86,24 @@ public class MypageFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        myName = view.findViewById(R.id.my_name);
+
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        String uid = user.getUid();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.document("user/" + uid).get().addOnCompleteListener(task -> {
+            if(task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                name = (String) document.get("name");
+                myName.setText(name);
+            }
+        });
         logoutBtn = view.findViewById(R.id.logout_btn);
+        withdraw = view.findViewById(R.id.withdraw);
         logoutBtn.setOnClickListener(this);
+        withdraw.setOnClickListener(this);
+
     }
 
     @Override
@@ -86,6 +113,9 @@ public class MypageFragment extends Fragment implements View.OnClickListener {
             Toast.makeText(getActivity(), "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(getActivity(), Login.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        } else if (view == withdraw) {
+            Intent intent = new Intent(getActivity(), Withdrawal.class);
             startActivity(intent);
         }
     }
