@@ -2,16 +2,13 @@ package com.example.planner;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -51,8 +48,6 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.d(TAG,"onCreateViewHolder");
-
         //자신이 만든 itemview를 inflate한 다음 뷰홀더 생성
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.view_history_info,parent,false);
@@ -68,7 +63,6 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        Log.d(TAG,"onBindViewHolder");
 
         MyViewHolder myViewHolder = (MyViewHolder)holder;
 
@@ -91,7 +85,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReference();
         String solving = mySolving.get(position);
-        if (solving == "") {
+        if (solving.equals("")) {
             solving = "NoImg2.png";
         }
         StorageReference pathReference = storageReference.child(solving);
@@ -103,7 +97,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d("dkdk", "실패");
+
             }
         });
     }

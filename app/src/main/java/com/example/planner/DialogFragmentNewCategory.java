@@ -5,15 +5,11 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 
 public class DialogFragmentNewCategory extends DialogFragment {
 
@@ -43,7 +39,7 @@ public class DialogFragmentNewCategory extends DialogFragment {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                if (editText.getText().toString() != "") {
+                if (!editText.getText().toString().equals("")) {
                     String newCategory = editText.getText().toString();
                     fragmentInterfacer.onButtonClick(newCategory);
                     getDialog().dismiss();

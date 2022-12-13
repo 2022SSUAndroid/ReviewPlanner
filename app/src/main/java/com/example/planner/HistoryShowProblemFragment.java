@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,7 +87,7 @@ public class HistoryShowProblemFragment extends Fragment {
             showImg = view.findViewById(R.id.problem_img);
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageReference = storage.getReference();
-            if (problemImg == "") {
+            if (problemImg.equals("")) {
                 problemImg = "NoImg.png";
             }
             StorageReference pathReference = storageReference.child(problemImg);
@@ -100,7 +99,6 @@ public class HistoryShowProblemFragment extends Fragment {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Log.d("dkdk", "실패");
                 }
             });
         }
