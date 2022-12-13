@@ -97,6 +97,7 @@ public class TodayFragment extends Fragment implements View.OnClickListener {
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             Fragment1 fragment1 = new Fragment1();
             fragment1.setArguments(bundle);
+            transaction.addToBackStack(null);
             transaction.replace(R.id.frame, fragment1);
             transaction.commit();
         }
@@ -104,6 +105,7 @@ public class TodayFragment extends Fragment implements View.OnClickListener {
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             Fragment2 fragment2 = new Fragment2();
             fragment2.setArguments(bundle);
+            transaction.addToBackStack(null);
             transaction.replace(R.id.frame, fragment2);
             transaction.commit();
         }
