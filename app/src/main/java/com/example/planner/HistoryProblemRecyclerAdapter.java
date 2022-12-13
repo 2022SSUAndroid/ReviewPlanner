@@ -69,10 +69,10 @@ public class HistoryProblemRecyclerAdapter extends RecyclerView.Adapter {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("problem", (Serializable) problems.get(selectedProblemName));
                     FragmentTransaction transaction = ((AppCompatActivity) view.getContext()).getSupportFragmentManager().beginTransaction();
-                    HistoryRecordFragment historyOXFragment = new HistoryRecordFragment();
-                    historyOXFragment.setArguments(bundle);
+                    HistoryRecordFragment historyRecordFragment = new HistoryRecordFragment();
+                    historyRecordFragment.setArguments(bundle);
                     transaction.addToBackStack(null);
-                    transaction.replace(R.id.fragment_container, historyOXFragment);
+                    transaction.replace(R.id.fragment_container, historyRecordFragment);
                     transaction.commit();
                 }
             });
