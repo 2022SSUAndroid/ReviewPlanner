@@ -91,8 +91,7 @@ public class CalenderFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
 
-        //DocumentReference docRef = db.collection("user").document(user.getUid());
-        this.docRef = db.collection("user").document("3rKDL4lMxSR7UnWB35GNoyEeI9s2");
+        this.docRef = db.collection("user").document(user.getUid());
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -142,6 +141,7 @@ public class CalenderFragment extends Fragment {
                     }
                 }
             });
+
         }
 
 
