@@ -19,6 +19,7 @@ public class ProblemObj implements Serializable {
     private HashMap<String, Boolean> reviewDay = new HashMap<>();
     private List<Boolean> ox = new ArrayList<>(Arrays.asList(false));
     private List<String> reviewTag = new ArrayList<>();
+    private List<String> mySolving = new ArrayList<>();
 
     public String getProblemName() {
         return problemName;
@@ -123,5 +124,13 @@ public class ProblemObj implements Serializable {
 
     public void addReviewTag(String reviewTag) {
         this.reviewTag.add(reviewTag);
+    }
+
+    public List<String> getMySolving() {
+        return mySolving;
+    }
+
+    public void setMySolving(List<String> mySolving) {
+        this.mySolving = mySolving;
     }
 }
