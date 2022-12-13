@@ -65,7 +65,7 @@ public class Fragment2 extends Fragment {
         for (String name : categoryNames) {
             ArrayList<String> names = new ArrayList<>();
             AtomicInteger takeOffCount = new AtomicInteger();
-            db.collection("user/" + "3rKDL4lMxSR7UnWB35GNoyEeI9s2" + "/" + name).get().addOnCompleteListener(task -> {
+            db.collection("user/" + uid + "/" + name).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
 

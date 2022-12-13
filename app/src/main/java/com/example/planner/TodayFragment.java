@@ -18,6 +18,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -27,6 +29,7 @@ import java.util.List;
 
 public class TodayFragment extends Fragment implements View.OnClickListener {
 
+    Button btn;
     Button btn1, btn2;
     DocumentReference docRef;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -58,6 +61,8 @@ public class TodayFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        btn = view.findViewById(R.id.add_problem);
+        btn.setOnClickListener(this);
 
         btn1 = view.findViewById(R.id.btn_1);
         btn1.setOnClickListener(this);
@@ -65,9 +70,10 @@ public class TodayFragment extends Fragment implements View.OnClickListener {
         btn2.setOnClickListener(this);
 
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = user.getUid();
 
-        //DocumentReference docRef = db.collection("user").document(user.getUid());
-        this.docRef = db.collection("user").document("3rKDL4lMxSR7UnWB35GNoyEeI9s2");
+        this.docRef = db.collection("user").document(uid);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
