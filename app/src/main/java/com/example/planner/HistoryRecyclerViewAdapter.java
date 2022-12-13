@@ -30,12 +30,14 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter {
 
     private List<Boolean> ox;
     private List<String> reviewTag;
+    private List<String> mySolving;
     Context context;
 
     //생성자를 통하여 데이터 리스트 context를 받음
     public HistoryRecyclerViewAdapter(Context context, Map selectedProblem){
         this.ox = (List<Boolean>) selectedProblem.get("ox");
         this.reviewTag = (List<String>) selectedProblem.get("reviewTag");
+        this.mySolving = (List<String>) selectedProblem.get("mySolving");
         this.context = context;
     }
 
@@ -86,10 +88,13 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter {
         /**
          * 임시 이미지
          */
-        myViewHolder.mysolution.setImageResource(R.drawable.camera);
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReference();
-        StorageReference pathReference = storageReference.child("문제.png");
+        String solving = mySolving.get(position);
+        if (solving == "") {
+            solving = "NoImg2.png";
+        }
+        StorageReference pathReference = storageReference.child(solving);
         pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {

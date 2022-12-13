@@ -4,7 +4,9 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -97,6 +100,18 @@ public class HistoryRecordFragment extends Fragment {
             recyclerView = view.findViewById(R.id.recycler);
 
             problemName.setText((String) selectedProblem.get("problemName"));
+            problemBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("problem", (String) selectedProblem.get("problemImg"));
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    HistoryShowProblemFragment historyShowProblemFragment = new HistoryShowProblemFragment();
+                    historyShowProblemFragment.setArguments(bundle);
+                    transaction.add(R.id.fragment_container, historyShowProblemFragment);
+                    transaction.commit();
+                }
+            });
 
             adapter = new HistoryRecyclerViewAdapter(getActivity(), selectedProblem);
             recyclerView.setAdapter(adapter);
