@@ -109,6 +109,11 @@ public class Fragment1 extends Fragment {
             transaction.addToBackStack(null);
             transaction.replace(R.id.frame, problemListFragment);
             transaction.commit();
+
+
+
+
+
         }
 
     };
