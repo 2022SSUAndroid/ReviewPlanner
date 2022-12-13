@@ -228,14 +228,14 @@ public class SolvingRegisterFragment extends Fragment {
                         categories = (List) document.get("categories");
                         if(!categories.contains(problemObj.getCategory())){
                             categories.add(problemObj.getCategory());
-                        }
-                        name = (String) document.get("name");
-                        HashMap<String, Object> cf = new HashMap<>();
+                            name = (String) document.get("name");
+                            HashMap<String, Object> cf = new HashMap<>();
 
-                        cf.put("categories", categories);
-                        cf.put("id", user.getEmail());
-                        cf.put("name", name);
-                        db.document("user/" + uid).set(cf);
+                            cf.put("categories", categories);
+                            cf.put("id", user.getEmail());
+                            cf.put("name", name);
+                            db.document("user/" + uid).set(cf);
+                        }
                     }
                 });
 
