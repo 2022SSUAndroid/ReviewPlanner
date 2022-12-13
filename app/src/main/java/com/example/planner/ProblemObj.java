@@ -13,10 +13,10 @@ public class ProblemObj implements Serializable {
     private String problemName = "";
     private String category = "";
     private List<Integer> cycle = new ArrayList<>();
-    private String problemImg = "";  // 자료형 정확하지 않음
-    private String solutionImg = ""; // 자료형 정확하지 않음
+    private String problemImg = "";
+    private String solutionImg = "";
     private int reviewCnt = 0;
-    private HashMap<String, Boolean> reviewDay = new HashMap<>();
+    private List<String> reviewDay = new ArrayList<>();
     private List<Boolean> ox = new ArrayList<>(Arrays.asList(false));
     private List<String> reviewTag = new ArrayList<>();
     private List<String> mySolving = new ArrayList<>(Arrays.asList(""));
@@ -69,24 +69,7 @@ public class ProblemObj implements Serializable {
         this.reviewCnt = recycleCnt;
     }
 
-    public HashMap<String, Boolean> getReviewDay() {
-        return reviewDay;
-    }
-
-    public void setReviewDay(HashMap<String, Boolean> reviewDay) {
-        this.reviewDay = reviewDay;
-    }
-
-    public HashMap<String, Boolean> makeReviewDayHashMap () {
-        HashMap<String, Boolean> reviewDay = new HashMap<>();
-        List<String> calculatedReviewDay = calculateReviewDay();
-        for (int i = 0; i < calculatedReviewDay.size(); i++) {
-            reviewDay.put(calculatedReviewDay.get(i), false);
-        }
-        return reviewDay;
-    }
-
-    private List<String> calculateReviewDay () {
+    public List<String> calculateReviewDay () {
         List<String> reviewDay = new ArrayList<>();
         Date today = new Date();
         Calendar cal = Calendar.getInstance();
@@ -132,5 +115,13 @@ public class ProblemObj implements Serializable {
 
     public void setMySolving(List<String> mySolving) {
         this.mySolving = mySolving;
+    }
+
+    public List<String> getReviewDay() {
+        return reviewDay;
+    }
+
+    public void setReviewDay(List<String> reviewDay) {
+        this.reviewDay = reviewDay;
     }
 }
