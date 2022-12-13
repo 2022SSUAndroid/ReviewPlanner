@@ -1,15 +1,10 @@
 package com.example.planner;
 
-import static android.app.Activity.RESULT_OK;
-
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResult;
@@ -18,27 +13,39 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link RegisterFragment#newInstance} factory method to
+ * Use the {@link ProblemRegisterFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RegisterFragment extends Fragment  {
+public class ProblemRegisterFragment extends Fragment  {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -57,8 +64,12 @@ public class RegisterFragment extends Fragment  {
 
     ImageView imageView;
     Button next;
+    ProblemObj problemObj = new ProblemObj();
 
-    public RegisterFragment() {
+
+    private final String TAG = "ProblemRegisterFragment";
+
+    public ProblemRegisterFragment() {
         // Required empty public constructor
     }
 
@@ -71,8 +82,8 @@ public class RegisterFragment extends Fragment  {
      * @return A new instance of fragment RegisterFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static RegisterFragment newInstance(String param1, String param2) {
-        RegisterFragment fragment = new RegisterFragment();
+    public static ProblemRegisterFragment newInstance(String param1, String param2) {
+        ProblemRegisterFragment fragment = new ProblemRegisterFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -102,6 +113,7 @@ public class RegisterFragment extends Fragment  {
         btn_image = (ImageView) view.findViewById(R.id.btn_image);
         next = (Button) view.findViewById(R.id.next);
 
+
         btn_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -129,10 +141,100 @@ public class RegisterFragment extends Fragment  {
                 startActivityResult.launch(intent);
             }
         });
+
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Date now = new Date();
+                final String time = new SimpleDateFormat("yyyyMMddHHmmss", Locale.ENGLISH).format(now);
+                problemObj.setProblemImg(time);
+
+                //Log확인
+                Log.d("problemObj", "ProblemIMG : " + problemObj.getProblemImg());
+
+
+
+                // Get a default Storage bucket
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+
+                // Points to the root reference
+                StorageReference storageRef = storage.getReference();
+
+                // Create a reference to 'images/mountains.jpg'
+                StorageReference mountainImagesRef = storageRef.child(time);
+                //StorageReference mountainImagesRef = storageRef.child(getPath("jpg"));
+
+                //for test
+                //StorageReference mountainImagesRef = storageRef.child("yWXNknPkHgUnph1iV29H0fe97LV2/mountains.jpg"); // 로그인 안하고 시도
+                //StorageReference mountainImagesRef = storageRef.child("public/mountains.jpg"); // 로그인 하고 시도
+
+                // Get the data from an ImageView as bytes
+                Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos); //0-100
+                byte[] data = baos.toByteArray();
+
+                UploadTask uploadTask = mountainImagesRef.putBytes(data);
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                        Log.d(TAG, "이미지뷰의 이미지 업로드 실패");
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                        // ...
+                        Log.d(TAG, "이미지뷰의 이미지 업로드 성공");
+
+//                        launchDownloadActivity(taskSnapshot.getMetadata().getReference().toString());
+                    }
+                });
+
+                getParentFragmentManager().beginTransaction().replace(R.id.add_problem_fragment_container, SolvingRegisterFragment.newInstance("param1", "param2")).addToBackStack(null).commit();
+
+            }
+            private String getPath(String extension) {
+                String uid = getUidOfCurrentUser();
+
+                String dir = (uid != null) ? uid : "public";
+
+                String fileName = (uid != null) ? (uid + "_" + System.currentTimeMillis() + "." + extension)
+                        : ("anonymous" + "_" + System.currentTimeMillis() + "." + extension );
+
+                return dir + "/" + fileName;
+            }
+
+            //            private void launchDownloadActivity(String referenceForDownload) {
+//                Intent intent = new Intent(this, DownloadActivity.class);
+//                intent.putExtra("DOWNLOAD_REF", referenceForDownload);
+//                startActivity(intent);
+//            }
+            private boolean hasSignedIn() {
+                return FirebaseAuth.getInstance().getCurrentUser() != null ? true : false;
+            }
+
+            private String getUidOfCurrentUser() {
+                return hasSignedIn() ? FirebaseAuth.getInstance().getCurrentUser().getUid() : null;
+            }
+        });
         return view;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
+        getParentFragmentManager().setFragmentResultListener("requestKey", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                problemObj = (ProblemObj) result.getSerializable("bundleKey");
+            }
+        });
+
+    }
 
     ActivityResultLauncher<Intent> startActivityResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -169,4 +271,5 @@ public class RegisterFragment extends Fragment  {
                 }
             }
     );
+
 }

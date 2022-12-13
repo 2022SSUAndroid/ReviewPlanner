@@ -3,14 +3,19 @@ package com.example.planner;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +35,7 @@ public class ReviewFragment extends Fragment {
 
     ProblemObj problemObj = new ProblemObj();
     TextView btn_next;
+    EditText reviewTag;
 
     public ReviewFragment() {
         // Required empty public constructor
@@ -75,15 +81,44 @@ public class ReviewFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_review, container, false);
 
         btn_next = (TextView) view.findViewById(R.id.btn_next);
+        reviewTag = (EditText) view.findViewById(R.id.reviewTag);
 
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getParentFragmentManager().beginTransaction().replace(R.id.add_problem_fragment_container, RegisterFragment.newInstance("param1", "param2")).addToBackStack(null).commit();
+
+                List<String> reviewTagList = Arrays.asList(reviewTag.getText().toString());
+                problemObj.setReviewTag(reviewTagList);
+
+                //Log 확인
+                Log.d("problemObj", "reviewTag : " + problemObj.getReviewTag());
+
+                Bundle result = new Bundle();
+                result.putSerializable("bundleKey", problemObj);
+                getParentFragmentManager().setFragmentResult("requestKey", result);
+
+                getParentFragmentManager().beginTransaction().replace(R.id.add_problem_fragment_container, ProblemRegisterFragment.newInstance("param1", "param2")).addToBackStack(null).commit();
 
             }
         });
 
         return view;
+    }
+
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        getParentFragmentManager().setFragmentResultListener("requestKey", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                problemObj = (ProblemObj) result.getSerializable("bundleKey");
+            }
+        });
+
+//        List<String> reviewTag = Arrays.asList(null);
+//        problemObj.setReviewTag(reviewTag);
+
     }
 }
