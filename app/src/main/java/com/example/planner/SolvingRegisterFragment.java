@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
 import android.util.Log;
@@ -23,10 +25,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -35,8 +42,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -65,6 +74,9 @@ public class SolvingRegisterFragment extends Fragment {
     ImageView imageView;
     Button next;
     ProblemObj problemObj = new ProblemObj();
+
+    FirebaseAuth mAuth;
+    List<String> categories = new ArrayList<>();
 
     private final String TAG = "SolvingRegisterFragment";
 
@@ -109,6 +121,8 @@ public class SolvingRegisterFragment extends Fragment {
         btn_camera = (ImageView) view.findViewById(R.id.btn_camera);
         btn_image = (ImageView) view.findViewById(R.id.btn_image);
         next = (Button) view.findViewById(R.id.next);
+
+        mAuth = FirebaseAuth.getInstance();
 
 
         btn_camera.setOnClickListener(new View.OnClickListener() {
@@ -189,6 +203,42 @@ public class SolvingRegisterFragment extends Fragment {
 //                        launchDownloadActivity(taskSnapshot.getMetadata().getReference().toString());
                     }
                 });
+
+                FirebaseUser user = mAuth.getCurrentUser();
+                String uid = user.getUid();
+
+                // 파이어베이스에서 카테고리가 selectedCategory인 컬렉션에 들어가서 문제 해시맵<이름, 객체>로 가져오기
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                db.document("user/" + uid).get().addOnCompleteListener(task -> {
+                    if(task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        categories = (List) document.get("categories");
+                        if(!categories.contains(problemObj.getCategory())){
+                            categories.add(problemObj.getCategory());
+                        }
+                    }
+                });
+
+                HashMap<String, Object> cf = new HashMap<>();
+                cf.put("categories", categories);
+                db.document("user/" + uid).update(cf);
+
+
+                HashMap<Object,Object> hashMap = new HashMap<>();
+
+                hashMap.put("category", problemObj.getCategory());
+                hashMap.put("cycle", problemObj.getCycle());
+                hashMap.put("mySolving", problemObj.getMySolving());
+                hashMap.put("ox", problemObj.getOX());
+                hashMap.put("problemImg", problemObj.getProblemImg());
+                hashMap.put("problemName", problemObj.getProblemName());
+                hashMap.put("reviewCnt", problemObj.getReviewCnt());
+                hashMap.put("reviewDay", problemObj.getReviewDay());
+                hashMap.put("reviewTag", problemObj.getReviewTag());
+                hashMap.put("solutionImg", problemObj.getSolutionImg());
+
+                db.document("user/" + uid + "/" + problemObj.getCategory() + "/" + problemObj.getProblemName()).set(hashMap);
+
 
                 //NEXT VIEW
                 Intent intent = new Intent(getActivity(),MainActivity.class); //fragment라서 activity intent와는 다른 방식
