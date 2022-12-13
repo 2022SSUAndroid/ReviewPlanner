@@ -63,15 +63,14 @@ public class Fragment1 extends Fragment {
         for (String name : categoryNames) {
             ArrayList<String> names = new ArrayList<>();
             AtomicInteger todayCount = new AtomicInteger();
-            db.collection("user/" + "3rKDL4lMxSR7UnWB35GNoyEeI9s2" + "/" + name).get().addOnCompleteListener(task -> {
+            db.collection("user/" + uid + "/" + name).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
 
                         ArrayList reviewDay = (ArrayList) document.getData().get("reviewDay");
                         ArrayList ox = (ArrayList) document.getData().get("ox");
 
-                        // today로 바꾸기
-                        if (reviewDay.get(ox.size()).equals("20221219")) {
+                        if (reviewDay.get(ox.size()).equals(today)) {
                             todayCount.getAndIncrement();
                             names.add(document.getId());
                         }

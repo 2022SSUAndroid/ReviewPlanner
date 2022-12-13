@@ -8,25 +8,24 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class TodayFragment extends Fragment implements View.OnClickListener {
 
+    Button btn;
     Button btn1, btn2;
     DocumentReference docRef;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -58,6 +57,8 @@ public class TodayFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        btn = view.findViewById(R.id.add_problem);
+        btn.setOnClickListener(this);
 
         btn1 = view.findViewById(R.id.btn_1);
         btn1.setOnClickListener(this);
@@ -65,9 +66,10 @@ public class TodayFragment extends Fragment implements View.OnClickListener {
         btn2.setOnClickListener(this);
 
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = user.getUid();
 
-        //DocumentReference docRef = db.collection("user").document(user.getUid());
-        this.docRef = db.collection("user").document("3rKDL4lMxSR7UnWB35GNoyEeI9s2");
+        this.docRef = db.collection("user").document(uid);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -75,13 +77,14 @@ public class TodayFragment extends Fragment implements View.OnClickListener {
                     DocumentSnapshot document = task.getResult();
                     ArrayList categoryReturnNames = (ArrayList) document.get("categories");
 
-                    for (Object category : categoryReturnNames) {
-                        String categoryName = category.toString();
-                        categoryNames.add(categoryName);
-                    }
+                    try {
+                        for (Object category : categoryReturnNames) {
+                            String categoryName = category.toString();
+                            categoryNames.add(categoryName);
+                        }
+                    } catch (NullPointerException e) {
 
-                } else {
-                    Toast.makeText(getActivity(), "등록 된 문제가 없습니다", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -93,7 +96,10 @@ public class TodayFragment extends Fragment implements View.OnClickListener {
         Bundle bundle = new Bundle();
         bundle.putStringArrayList("categories", categoryNames);
 
-        if (view == btn1) {
+        if (view == btn) {
+            getActivity().startActivity(new Intent(getActivity(), AddProblemActivity.class));
+        }
+        else if (view == btn1) {
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             Fragment1 fragment1 = new Fragment1();
             fragment1.setArguments(bundle);
