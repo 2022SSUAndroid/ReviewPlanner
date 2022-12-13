@@ -19,7 +19,7 @@ public class ProblemObj implements Serializable {
     private HashMap<String, Boolean> reviewDay = new HashMap<>();
     private List<Boolean> ox = new ArrayList<>(Arrays.asList(false));
     private List<String> reviewTag = new ArrayList<>();
-    private List<String> mySolving = new ArrayList<>();
+    private List<String> mySolving = new ArrayList<>(Arrays.asList(""));
 
     public String getProblemName() {
         return problemName;

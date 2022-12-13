@@ -77,6 +77,7 @@ public class SolvingRegisterFragment extends Fragment {
 
     FirebaseAuth mAuth;
     List<String> categories = new ArrayList<>();
+    String name = "";
 
     private final String TAG = "SolvingRegisterFragment";
 
@@ -108,6 +109,7 @@ public class SolvingRegisterFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+            problemObj = (ProblemObj) getArguments().getSerializable("bundleKey4");
         }
     }
 
@@ -116,14 +118,19 @@ public class SolvingRegisterFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_solving_register, container, false);
+        return inflater.inflate(R.layout.fragment_solving_register, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         imageView = (ImageView) view.findViewById(R.id.imageView);
         btn_camera = (ImageView) view.findViewById(R.id.btn_camera);
         btn_image = (ImageView) view.findViewById(R.id.btn_image);
         next = (Button) view.findViewById(R.id.next);
 
         mAuth = FirebaseAuth.getInstance();
-
 
         btn_camera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -207,6 +214,12 @@ public class SolvingRegisterFragment extends Fragment {
                 FirebaseUser user = mAuth.getCurrentUser();
                 String uid = user.getUid();
 
+                Log.d("problemObj", "category : " + problemObj.getCategory());
+                Log.d("problemObj", "name : " + problemObj.getProblemName());
+                Log.d("problemObj", "cycle : " + problemObj.getCycle().toString());
+                Log.d("problemObj", "tag : " + problemObj.getReviewTag().toString());
+                Log.d("problemObj", "problemImg : " + problemObj.getProblemImg());
+
                 // 파이어베이스에서 카테고리가 selectedCategory인 컬렉션에 들어가서 문제 해시맵<이름, 객체>로 가져오기
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 db.document("user/" + uid).get().addOnCompleteListener(task -> {
@@ -216,13 +229,15 @@ public class SolvingRegisterFragment extends Fragment {
                         if(!categories.contains(problemObj.getCategory())){
                             categories.add(problemObj.getCategory());
                         }
+                        name = (String) document.get("name");
+                        HashMap<String, Object> cf = new HashMap<>();
+
+                        cf.put("categories", categories);
+                        cf.put("id", user.getEmail());
+                        cf.put("name", name);
+                        db.document("user/" + uid).set(cf);
                     }
                 });
-
-                HashMap<String, Object> cf = new HashMap<>();
-                cf.put("categories", categories);
-                db.document("user/" + uid).update(cf);
-
 
                 HashMap<Object,Object> hashMap = new HashMap<>();
 
@@ -241,8 +256,8 @@ public class SolvingRegisterFragment extends Fragment {
 
 
                 //NEXT VIEW
-                Intent intent = new Intent(getActivity(),MainActivity.class); //fragment라서 activity intent와는 다른 방식
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                Intent intent = new Intent(getActivity(),MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
 
 
@@ -273,22 +288,6 @@ public class SolvingRegisterFragment extends Fragment {
             }
 
         });
-        // Inflate the layout for this fragment
-        //return inflater.inflate(R.layout.fragment_solving_register, container, false);
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        getParentFragmentManager().setFragmentResultListener("requestKey", this, new FragmentResultListener() {
-            @Override
-            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                problemObj = (ProblemObj) result.getSerializable("bundleKey");
-            }
-        });
-
     }
 
     ActivityResultLauncher<Intent> startActivityResult = registerForActivityResult(

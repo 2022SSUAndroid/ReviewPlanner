@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.InputType;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -12,7 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class DialogFragmentMyCycle extends DialogFragment {
@@ -43,7 +41,7 @@ public class DialogFragmentMyCycle extends DialogFragment {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                if (editText.getText().toString() != "") {
+                if (!editText.getText().toString().equals("")) {
                     List<Integer> myCycle = new ArrayList<>();
                     String cycleStr = editText.getText().toString();
                     String[] cycleArr = cycleStr.split(",");

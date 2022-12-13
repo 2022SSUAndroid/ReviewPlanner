@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.provider.MediaStore;
 import android.util.Log;
@@ -97,17 +98,27 @@ public class ProblemRegisterFragment extends Fragment  {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+            problemObj = (ProblemObj) getArguments().getSerializable("bundleKey3");
         }
-
-
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-       View view = inflater.inflate(R.layout.fragment_register, container, false);
+        return inflater.inflate(R.layout.fragment_register, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        Log.d("problemObj", "category : " + problemObj.getCategory());
+        Log.d("problemObj", "name : " + problemObj.getProblemName());
+        Log.d("problemObj", "cycle : " + problemObj.getCycle().toString());
+        Log.d("problemObj", "tag : " + problemObj.getReviewTag().toString());
+        Log.d("problemObj", "problemImg : " + problemObj.getProblemImg());
+
         imageView = (ImageView) view.findViewById(R.id.imageView);
         btn_camera = (ImageView) view.findViewById(R.id.btn_camera);
         btn_image = (ImageView) view.findViewById(R.id.btn_image);
@@ -192,9 +203,14 @@ public class ProblemRegisterFragment extends Fragment  {
 //                        launchDownloadActivity(taskSnapshot.getMetadata().getReference().toString());
                     }
                 });
-
-                getParentFragmentManager().beginTransaction().replace(R.id.add_problem_fragment_container, SolvingRegisterFragment.newInstance("param1", "param2")).addToBackStack(null).commit();
-
+                Bundle result = new Bundle();
+                result.putSerializable("bundleKey4", problemObj);
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                SolvingRegisterFragment solvingRegisterFragment = new SolvingRegisterFragment();//프래그먼트2 선언
+                solvingRegisterFragment.setArguments(result);//번들을 프래그먼트2로 보낼 준비
+                transaction.replace(R.id.add_problem_fragment_container, solvingRegisterFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
             private String getPath(String extension) {
                 String uid = getUidOfCurrentUser();
@@ -218,19 +234,6 @@ public class ProblemRegisterFragment extends Fragment  {
 
             private String getUidOfCurrentUser() {
                 return hasSignedIn() ? FirebaseAuth.getInstance().getCurrentUser().getUid() : null;
-            }
-        });
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        getParentFragmentManager().setFragmentResultListener("requestKey", this, new FragmentResultListener() {
-            @Override
-            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                problemObj = (ProblemObj) result.getSerializable("bundleKey");
             }
         });
 

@@ -5,14 +5,16 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentResultListener;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,10 +23,11 @@ import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link AddCycleFragment#newInstance} factory method to
+ * Use the {@link AddCycleAgainFragment#newInstance} factory method to
  * create an instance of this fragment.
+ *
  */
-public class AddCycleFragment extends Fragment implements View.OnClickListener{
+public class AddCycleAgainFragment extends Fragment implements View.OnClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -45,9 +48,7 @@ public class AddCycleFragment extends Fragment implements View.OnClickListener{
 
     List<Integer> myCycle = new ArrayList<>();
 
-    public AddCycleFragment() {
-        // Required empty public constructor
-    }
+    FirebaseAuth mAuth;
 
     /**
      * Use this factory method to create a new instance of
@@ -55,16 +56,20 @@ public class AddCycleFragment extends Fragment implements View.OnClickListener{
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment AddCycleFragment.
+     * @return A new instance of fragment AddCycleAgainFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddCycleFragment newInstance(String param1, String param2) {
-        AddCycleFragment fragment = new AddCycleFragment();
+    public static AddCycleAgainFragment newInstance(String param1, String param2) {
+        AddCycleAgainFragment fragment = new AddCycleAgainFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public AddCycleAgainFragment() {
+        // Required empty public constructor
     }
 
     @Override
@@ -73,32 +78,28 @@ public class AddCycleFragment extends Fragment implements View.OnClickListener{
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+            problemObj = (ProblemObj) getArguments().getSerializable("bundlebundle");
         }
-        getParentFragmentManager().setFragmentResultListener("requestKey", this, new FragmentResultListener() {
-            @Override
-            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                problemObj = (ProblemObj) result.getSerializable("bundleKey");
-            }
-        });
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_cycle, container, false);
+        return inflater.inflate(R.layout.fragment_add_cycle_again, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         selectedView = view.findViewById(R.id.selected);
         cycle1View = view.findViewById(R.id.cycle1);
         cycle2View = view.findViewById(R.id.cycle2);
         cycle3View = view.findViewById(R.id.cycle3);
         selectMyselfView = view.findViewById(R.id.select_myself);
         nextView = view.findViewById(R.id.btn_next);
+
+        mAuth = FirebaseAuth.getInstance();
 
         selectedView.setText("복습주기를 선택하세요");
 
@@ -119,15 +120,26 @@ public class AddCycleFragment extends Fragment implements View.OnClickListener{
             HashMap<String, Boolean> reviewDay = problemObj.makeReviewDayHashMap();
             problemObj.setReviewDay(reviewDay);
 
-            Bundle result = new Bundle();
-            result.putSerializable("bundleKey2", problemObj);
+            FirebaseUser user = mAuth.getCurrentUser();
+            String uid = user.getUid();
 
-            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-            ReviewFragment reviewFragment = new ReviewFragment();
-            reviewFragment.setArguments(result);
-            transaction.replace(R.id.add_problem_fragment_container, reviewFragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
+            HashMap<Object,Object> hashMap = new HashMap<>();
+
+            hashMap.put("category", problemObj.getCategory());
+            hashMap.put("cycle", problemObj.getCycle());
+            hashMap.put("mySolving", problemObj.getMySolving());
+            hashMap.put("ox", problemObj.getOX());
+            hashMap.put("problemImg", problemObj.getProblemImg());
+            hashMap.put("problemName", problemObj.getProblemName());
+            hashMap.put("reviewCnt", problemObj.getReviewCnt());
+            hashMap.put("reviewDay", problemObj.getReviewDay());
+            hashMap.put("reviewTag", problemObj.getReviewTag());
+            hashMap.put("solutionImg", problemObj.getSolutionImg());
+
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.document("user/" + uid + "/" + problemObj.getCategory() + "/" + problemObj.getProblemName()).set(hashMap);
+
+
         } else if (view == selectMyselfView) {
             DialogFragmentMyCycle dialog = new DialogFragmentMyCycle();
             dialog.setFragmentInterface(new DialogFragmentMyCycle.MyFragmentInterface() {

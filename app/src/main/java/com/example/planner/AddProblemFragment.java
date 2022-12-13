@@ -1,15 +1,12 @@
 package com.example.planner;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -141,13 +138,11 @@ public class AddProblemFragment extends Fragment implements View.OnClickListener
     @Override
     public void onClick(View view) {
         if (view == addCategoryBtn) {
-            // 직접선택 구현해야 함
-            Toast.makeText(getActivity(), "직접선택", Toast.LENGTH_SHORT).show();
             DialogFragmentNewCategory dialog = new DialogFragmentNewCategory();
             dialog.setFragmentInterfacer(new DialogFragmentNewCategory.MyFragmentInterfacer() {
                 @Override
                 public void onButtonClick(String input) {
-                    if (input != "") {
+                    if (!input.equals("")) {
                         if (category.contains(input)) {
                             Toast.makeText(getActivity(), "이미 존재하는 카테고리입니다.", Toast.LENGTH_SHORT).show();
                             return;
@@ -161,7 +156,6 @@ public class AddProblemFragment extends Fragment implements View.OnClickListener
                             @Override
                             public void onClick(View view) {
                                 problemObj.setCategory(newCategory);
-                                Toast.makeText(getActivity(), "선택한 카테고리는 " + newCategory, Toast.LENGTH_SHORT).show();
                             }
                         });
                         categoryBtn.add(btn);
@@ -175,11 +169,6 @@ public class AddProblemFragment extends Fragment implements View.OnClickListener
             int idx = categoryBtn.indexOf(view);
             problemObj.setCategory(String.valueOf(categoryBtn.get(idx).getText()));
             categoryView.setText("카테고리 선택 : " + problemObj.getCategory());
-            /**
-             * 아래 토스트는 선택이 제대로 됐는지 확인을 위한 것임.
-             * 선택한 버튼의 텍스트(카테고리 이름)에 해당하는 카테고리에 문제가 저장되도록 하면 됨.
-             */
-            Toast.makeText(getActivity(), "선택한 카테고리는 " + categoryBtn.get(idx).getText(), Toast.LENGTH_SHORT).show();
         } else if (view == nextView) {
             if (problem.getText().toString().equals("")) {
                 Toast.makeText(getActivity(), "문제 이름을 입력하세요.", Toast.LENGTH_SHORT).show();
@@ -188,8 +177,6 @@ public class AddProblemFragment extends Fragment implements View.OnClickListener
             }
             else{
                 problemObj.setProblemName(problem.getText().toString());
-                // 아래 토스트는 확인용 (나중에 삭제해야 함)
-                Toast.makeText(getActivity(), "문제 이름 : " + problemObj.getProblemName() + "\n카테고리 : " + problemObj.getCategory(), Toast.LENGTH_SHORT).show();
                 Bundle result = new Bundle();
                 result.putSerializable("bundleKey", problemObj);
                 getParentFragmentManager().setFragmentResult("requestKey", result);

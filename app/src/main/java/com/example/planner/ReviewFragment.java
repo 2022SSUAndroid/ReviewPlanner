@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,7 +23,7 @@ import java.util.List;
  * Use the {@link ReviewFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ReviewFragment extends Fragment {
+public class ReviewFragment extends Fragment implements View.OnClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,47 +63,18 @@ public class ReviewFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("dfdfdf", "onCreate");
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+            problemObj = (ProblemObj) getArguments().getSerializable("bundleKey2");
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        getParentFragmentManager().setFragmentResultListener("requestKey", this, new FragmentResultListener() {
-            @Override
-            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                problemObj = (ProblemObj) result.getSerializable("bundleKey");
-            }
-        });
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_review, container, false);
-
-        btn_next = (TextView) view.findViewById(R.id.btn_next);
-        reviewTag = (EditText) view.findViewById(R.id.reviewTag);
-
-        btn_next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                List<String> reviewTagList = Arrays.asList(reviewTag.getText().toString());
-                problemObj.setReviewTag(reviewTagList);
-
-                //Log 확인
-                Log.d("problemObj", "reviewTag : " + problemObj.getReviewTag());
-
-                Bundle result = new Bundle();
-                result.putSerializable("bundleKey", problemObj);
-                getParentFragmentManager().setFragmentResult("requestKey", result);
-
-                getParentFragmentManager().beginTransaction().replace(R.id.add_problem_fragment_container, ProblemRegisterFragment.newInstance("param1", "param2")).addToBackStack(null).commit();
-
-            }
-        });
-
-        return view;
+        return inflater.inflate(R.layout.fragment_review, container, false);
     }
 
 
@@ -110,15 +82,41 @@ public class ReviewFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        getParentFragmentManager().setFragmentResultListener("requestKey", this, new FragmentResultListener() {
-            @Override
-            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                problemObj = (ProblemObj) result.getSerializable("bundleKey");
-            }
-        });
+        Log.d("problemObj", "category : " + problemObj.getCategory());
+        Log.d("problemObj", "name : " + problemObj.getProblemName());
+        Log.d("problemObj", "cycle : " + problemObj.getCycle().toString());
+        Log.d("problemObj", "tag : " + problemObj.getReviewTag().toString());
+        Log.d("problemObj", "problemImg : " + problemObj.getProblemImg());
+
+
+        btn_next = (TextView) view.findViewById(R.id.btn_next);
+        reviewTag = (EditText) view.findViewById(R.id.reviewTag);
+
+        btn_next.setOnClickListener(this);
+
 
 //        List<String> reviewTag = Arrays.asList(null);
 //        problemObj.setReviewTag(reviewTag);
 
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view == btn_next) {
+            List<String> reviewTagList = Arrays.asList(reviewTag.getText().toString());
+            problemObj.setReviewTag(reviewTagList);
+
+            //Log 확인
+            Log.d("problemObj", "reviewTag : " + problemObj.getReviewTag());
+
+            Bundle result = new Bundle();
+            result.putSerializable("bundleKey3", problemObj);
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            ProblemRegisterFragment problemRegisterFragment = new ProblemRegisterFragment();//프래그먼트2 선언
+            problemRegisterFragment.setArguments(result);//번들을 프래그먼트2로 보낼 준비
+            transaction.replace(R.id.add_problem_fragment_container, problemRegisterFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
     }
 }
