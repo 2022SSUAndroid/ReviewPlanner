@@ -1,7 +1,5 @@
 package com.example.planner;
 
-import static android.content.ContentValues.TAG;
-
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,21 +15,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.core.FirestoreClient;
+import com.google.firebase.firestore.util.BackgroundQueue;
+
+import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class CalenderFragment extends Fragment {
 
@@ -40,10 +35,12 @@ public class CalenderFragment extends Fragment {
 
     ListView customListView;
     private static CustomAdapter customAdapter;
+    ArrayList<String> categoryNames = new ArrayList<>();
+    ArrayList<Category> categories;
 
-//    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth;
-//    DocumentReference docRef;
+    DocumentReference docRef;
 
     public CalenderFragment() {
 
@@ -91,54 +88,59 @@ public class CalenderFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
 
-//        Firestore firestore = FirestoreClient.getFirestore();
-//        Iterable<CollectionReference> collections =
-//                firestore.collection("user").document("3rKDL4lMxSR7UnWB35GNoyEeI9s2").
-//
-//        for (CollectionReference collRef : collections) {
-//            System.out.println("Found subcollection with id: " + collRef.getId());
-//        }
-
         //DocumentReference docRef = db.collection("user").document(user.getUid());
-//        this.docRef = db.collection("user").document("3rKDL4lMxSR7UnWB35GNoyEeI9s2");
-//        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    DocumentSnapshot document = task.getResult();
-//                    Map data = document.getData();
-//                    ArrayList categoryReturnNames = (ArrayList) document.get("categories");
-//                    ArrayList<String> categoryNames = new ArrayList<>();
-//
-//                    for (Object category : categoryReturnNames) {
-//                        String categoryName = category.toString();
-//                        categoryNames.add(categoryName);
-//                    }
-//
-//                    Log.i("CalenderFragment", document.toString());
-//
-//                } else {
-//                    Toast.makeText(getActivity(), "해당하는 문제가 없습니다", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//        });
+        this.docRef = db.collection("user").document("3rKDL4lMxSR7UnWB35GNoyEeI9s2");
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    ArrayList categoryReturnNames = (ArrayList) document.get("categories");
+
+                    for (Object category : categoryReturnNames) {
+                        String categoryName = category.toString();
+                        categoryNames.add(categoryName);
+                    }
+
+                } else {
+                    Toast.makeText(getActivity(), "등록 된 문제가 없습니다", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     public void LoadProblems(int year, int month, int dayOfMonth)
     {
-        String day = "" + year + (month + 1) + "" + dayOfMonth;
+        String selectDay = "" + year + (month + 1) + "" + dayOfMonth;
+        categories = new ArrayList<>();
 
-//        categories = new ArrayList<>();
-//
-//
-//        categories.add(new Category("영어", "2문제/4문제"));
-//        categories.add(new Category("수학", "1문제/3문제"));
-//        categories.add(new Category("정보", "1문제/5문제"));
-//
-//
-//        customAdapter = new CustomAdapter(getContext(), categories);
-//        customListView.setAdapter(customAdapter);
+        for (String name : categoryNames) {
+            //uid로 바꾸기
+            db.collection("user/" + "3rKDL4lMxSR7UnWB35GNoyEeI9s2" + "/" + name).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+
+                        ArrayList<String> reviewDay = (ArrayList<String>) document.getData().get("reviewDay");
+                        ArrayList<Boolean> ox = (ArrayList<Boolean>) document.getData().get("ox");
+
+                        for (int i = 0; i < reviewDay.size(); i++) {
+                            if (reviewDay.get(i).equals(selectDay)) {
+                                try {
+                                    if (ox.get(i)) categories.add(new Category(document.getId(), "O"));
+                                    else categories.add(new Category(document.getId(), "X"));
+                                } catch (IndexOutOfBoundsException e) {
+                                    categories.add(new Category(document.getId(), "X"));
+                                }
+
+                            }
+                        }
+                        customAdapter = new CustomAdapter(getContext(), categories);
+                        customListView.setAdapter(customAdapter);
+
+                    }
+                }
+            });
+        }
 
 
     }
