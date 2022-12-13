@@ -72,8 +72,8 @@ public class ProblemListFragment extends Fragment {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             String uid = user.getUid();
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-            // uid로 바꾸기
-            db.document("user/" + "3rKDL4lMxSR7UnWB35GNoyEeI9s2" + "/" + categoryName + "/" + selectProblem).get().addOnCompleteListener(task -> {
+
+            db.document("user/" + uid + "/" + categoryName + "/" + selectProblem).get().addOnCompleteListener(task -> {
                 if(task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     Map<String, Object> map = document.getData();
