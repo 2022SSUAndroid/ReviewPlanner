@@ -8,13 +8,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -25,7 +22,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class TodayFragment extends Fragment implements View.OnClickListener {
 
@@ -81,13 +77,14 @@ public class TodayFragment extends Fragment implements View.OnClickListener {
                     DocumentSnapshot document = task.getResult();
                     ArrayList categoryReturnNames = (ArrayList) document.get("categories");
 
-                    for (Object category : categoryReturnNames) {
-                        String categoryName = category.toString();
-                        categoryNames.add(categoryName);
-                    }
+                    try {
+                        for (Object category : categoryReturnNames) {
+                            String categoryName = category.toString();
+                            categoryNames.add(categoryName);
+                        }
+                    } catch (NullPointerException e) {
 
-                } else {
-                    Toast.makeText(getActivity(), "등록 된 문제가 없습니다", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -99,7 +96,10 @@ public class TodayFragment extends Fragment implements View.OnClickListener {
         Bundle bundle = new Bundle();
         bundle.putStringArrayList("categories", categoryNames);
 
-        if (view == btn1) {
+        if (view == btn) {
+            getActivity().startActivity(new Intent(getActivity(), AddProblemActivity.class));
+        }
+        else if (view == btn1) {
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             Fragment1 fragment1 = new Fragment1();
             fragment1.setArguments(bundle);
