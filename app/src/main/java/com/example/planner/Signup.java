@@ -21,7 +21,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 
 public class Signup extends AppCompatActivity {
@@ -94,12 +96,14 @@ public class Signup extends AppCompatActivity {
                             String email = user.getEmail();
                             String uid = user.getUid();
                             String name = nickname.getText().toString().trim();
+                            List<String> categories = new ArrayList<>();
 
                             //해쉬맵 테이블을 파이어베이스 데이터베이스에 저장
-                            HashMap<Object,String> hashMap = new HashMap<>();
+                            HashMap<Object,Object> hashMap = new HashMap<>();
 
                             hashMap.put("id",email);
                             hashMap.put("name",name);
+                            hashMap.put("categories", categories);
 
                             FirebaseFirestore db = FirebaseFirestore.getInstance();
                             db.collection("user").document(uid).set(hashMap);

@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -78,6 +79,12 @@ public class AddCycleFragment extends Fragment implements View.OnClickListener{
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        getParentFragmentManager().setFragmentResultListener("requestKey", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                problemObj = (ProblemObj) result.getSerializable("bundleKey");
+            }
+        });
     }
 
     @Override
@@ -91,13 +98,6 @@ public class AddCycleFragment extends Fragment implements View.OnClickListener{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        getParentFragmentManager().setFragmentResultListener("requestKey", this, new FragmentResultListener() {
-            @Override
-            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                problemObj = (ProblemObj) result.getSerializable("bundleKey");
-            }
-        });
-
         selectedView = view.findViewById(R.id.selected);
         cycle1View = view.findViewById(R.id.cycle1);
         cycle2View = view.findViewById(R.id.cycle2);
@@ -105,9 +105,7 @@ public class AddCycleFragment extends Fragment implements View.OnClickListener{
         selectMyselfView = view.findViewById(R.id.select_myself);
         nextView = view.findViewById(R.id.btn_next);
 
-        selectedView.setText(cycle1View.getText());
-        List<Integer> cycle1 = Arrays.asList(0, 1, 3, 7);
-        problemObj.setCycle(cycle1);
+        selectedView.setText("복습주기를 선택하세요");
         // 파이어베이스에 복습 주기 기본 설정은 cycle1으로
 
         cycle1View.setOnClickListener(this);
@@ -126,6 +124,7 @@ public class AddCycleFragment extends Fragment implements View.OnClickListener{
             // 확인용
             Log.d("problemObj", "problemName : " + problemObj.getProblemName());
             Log.d("problemObj", "category : " + problemObj.getCategory());
+            Log.d("problemObj", "cycle :" + problemObj.getCycle().toString());
 
             HashMap<String, Boolean> tmp = problemObj.getReviewDay();
             Set set = tmp.keySet();
@@ -133,12 +132,16 @@ public class AddCycleFragment extends Fragment implements View.OnClickListener{
             while(iterator.hasNext()) {
                 Log.d("problemObj", "reviewDay : " + iterator.next().toString());
             }
+
             Bundle result = new Bundle();
-            result.putSerializable("bundleKey", problemObj);
-            getParentFragmentManager().setFragmentResult("requestKey", result);
+            result.putSerializable("bundleKey2", problemObj);
 
-            getParentFragmentManager().beginTransaction().replace(R.id.add_problem_fragment_container, ReviewFragment.newInstance("param1", "param2")).addToBackStack(null).commit();
-
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            ReviewFragment reviewFragment = new ReviewFragment();//프래그먼트2 선언
+            reviewFragment.setArguments(result);//번들을 프래그먼트2로 보낼 준비
+            transaction.replace(R.id.add_problem_fragment_container, reviewFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
         } else if (view == selectMyselfView) {
             DialogFragmentMyCycle dialog = new DialogFragmentMyCycle();
             dialog.setFragmentInterface(new DialogFragmentMyCycle.MyFragmentInterface() {
