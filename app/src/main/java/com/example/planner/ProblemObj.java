@@ -126,6 +126,10 @@ public class ProblemObj implements Serializable {
         reviewCnt++;
     }
 
+    public void addMySolving(String img) {
+        this.mySolving.add(img);
+    }
+
     public List<String> getReviewTag() {
         return reviewTag;
     }

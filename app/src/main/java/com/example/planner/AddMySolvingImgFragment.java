@@ -162,7 +162,7 @@ public class AddMySolvingImgFragment extends Fragment {
 
                 Date now = new Date();
                 final String time = new SimpleDateFormat("yyyyMMddHHmmss", Locale.ENGLISH).format(now);
-                problemObj.setMySolving(Arrays.asList(time));
+                problemObj.addMySolving(time);
 
                 //Log 확인
                 Log.d("problemObj", "MySolvingIMG : " + problemObj.getMySolving());
