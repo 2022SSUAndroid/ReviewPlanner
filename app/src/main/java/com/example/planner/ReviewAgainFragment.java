@@ -1,15 +1,27 @@
 package com.example.planner;
 
+import static android.content.Intent.getIntent;
+
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+
+import org.checkerframework.checker.units.qual.A;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,6 +39,9 @@ public class ReviewAgainFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     ProblemObj problemObj;
+    Button btn_next;
+    EditText reviewTag;
+    private FragmentManager fragmentManager;
 
     public ReviewAgainFragment() {
         // Required empty public constructor
@@ -72,5 +87,33 @@ public class ReviewAgainFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Log.v("name", problemObj.getProblemName());
         Log.v("ox", problemObj.getOX().toString());
+
+        btn_next = (Button) view.findViewById(R.id.btn_next);
+        reviewTag = (EditText) view.findViewById(R.id.reviewTag);
+
+        btn_next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                problemObj.addReviewTag(reviewTag.toString());
+
+                //Log 확인
+                Log.d("problemObj", "reviewTag : " + problemObj.getReviewTag());
+
+                Bundle result = new Bundle();
+                result.putSerializable("bundleKey3", problemObj);
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                AddMySolvingImgFragment addMySolvingImgFragment = new AddMySolvingImgFragment();
+                addMySolvingImgFragment.setArguments(result);
+                transaction.replace(R.id.new_fragment, addMySolvingImgFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+
+
+            }
+        });
+
+
+
     }
-}
+
+        }
