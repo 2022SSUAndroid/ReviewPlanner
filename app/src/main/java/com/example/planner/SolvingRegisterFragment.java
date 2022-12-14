@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -74,6 +75,7 @@ public class SolvingRegisterFragment extends Fragment {
     ImageView imageView;
     Button next;
     ProblemObj problemObj = new ProblemObj();
+    Button pass_btn;
 
     FirebaseAuth mAuth;
     List<String> categories = new ArrayList<>();
@@ -129,6 +131,7 @@ public class SolvingRegisterFragment extends Fragment {
         btn_camera = (ImageView) view.findViewById(R.id.btn_camera);
         btn_image = (ImageView) view.findViewById(R.id.btn_image);
         next = (Button) view.findViewById(R.id.next);
+        pass_btn = (Button) view.findViewById(R.id.pass_btn);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -160,13 +163,73 @@ public class SolvingRegisterFragment extends Fragment {
             }
         });
 
+        pass_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                problemObj.setSolutionImg("");
+                Toast.makeText(getContext().getApplicationContext(), "풀이 이미지 등록 건너띄기 선택 완료", Toast.LENGTH_SHORT).show();
+
+
+                FirebaseUser user = mAuth.getCurrentUser();
+                String uid = user.getUid();
+
+                Log.d("problemObj", "category : " + problemObj.getCategory());
+                Log.d("problemObj", "name : " + problemObj.getProblemName());
+                Log.d("problemObj", "cycle : " + problemObj.getCycle().toString());
+                Log.d("problemObj", "tag : " + problemObj.getReviewTag().toString());
+                Log.d("problemObj", "problemImg : " + problemObj.getProblemImg());
+
+                // 파이어베이스에서 카테고리가 selectedCategory인 컬렉션에 들어가서 문제 해시맵<이름, 객체>로 가져오기
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                db.document("user/" + uid).get().addOnCompleteListener(task -> {
+                    if(task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        categories = (List) document.get("categories");
+                        if(!categories.contains(problemObj.getCategory())){
+                            categories.add(problemObj.getCategory());
+                        }
+                        name = (String) document.get("name");
+                        HashMap<String, Object> cf = new HashMap<>();
+
+                        cf.put("categories", categories);
+                        cf.put("id", user.getEmail());
+                        cf.put("name", name);
+                        db.document("user/" + uid).set(cf);
+                    }
+                });
+
+                HashMap<Object,Object> hashMap = new HashMap<>();
+
+                hashMap.put("category", problemObj.getCategory());
+                hashMap.put("cycle", problemObj.getCycle());
+                hashMap.put("mySolving", problemObj.getMySolving());
+                hashMap.put("ox", problemObj.getOX());
+                hashMap.put("problemImg", problemObj.getProblemImg());
+                hashMap.put("problemName", problemObj.getProblemName());
+                hashMap.put("reviewCnt", problemObj.getReviewCnt());
+                hashMap.put("reviewDay", problemObj.getReviewDay());
+                hashMap.put("reviewTag", problemObj.getReviewTag());
+                hashMap.put("solutionImg", problemObj.getSolutionImg());
+
+                db.document("user/" + uid + "/" + problemObj.getCategory() + "/" + problemObj.getProblemName()).set(hashMap);
+
+
+                //NEXT VIEW
+                Intent intent = new Intent(getActivity(),MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+
+            }
+        });
+
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Date now = new Date();
-                final String time = new SimpleDateFormat("yyyyMMddHHmmss", Locale.ENGLISH).format(now);
-                problemObj.setSolutionImg(time);
+                    Date now = new Date();
+                    final String time = new SimpleDateFormat("yyyyMMddHHmmss", Locale.ENGLISH).format(now);
+                    problemObj.setSolutionImg(time);
+
 
                 //Log 확인
                 Log.d("problemObj", "solutionIMG : " + problemObj.getSolutionImg());

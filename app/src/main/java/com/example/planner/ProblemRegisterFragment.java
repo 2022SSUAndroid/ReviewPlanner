@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -65,6 +66,7 @@ public class ProblemRegisterFragment extends Fragment  {
 
     ImageView imageView;
     Button next;
+    Button pass_btn;
     ProblemObj problemObj = new ProblemObj();
 
 
@@ -123,7 +125,7 @@ public class ProblemRegisterFragment extends Fragment  {
         btn_camera = (ImageView) view.findViewById(R.id.btn_camera);
         btn_image = (ImageView) view.findViewById(R.id.btn_image);
         next = (Button) view.findViewById(R.id.next);
-
+        pass_btn = (Button)view.findViewById(R.id.pass_btn);
 
         btn_camera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,6 +152,23 @@ public class ProblemRegisterFragment extends Fragment  {
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
                 startActivityResult.launch(intent);
+            }
+        });
+
+        pass_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                problemObj.setProblemImg("");
+                Toast.makeText(getContext().getApplicationContext(), "문제 이미지 등록 건너띄기 선택 완료", Toast.LENGTH_SHORT).show();
+
+                Bundle result = new Bundle();
+                result.putSerializable("bundleKey4", problemObj);
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                SolvingRegisterFragment solvingRegisterFragment = new SolvingRegisterFragment();//프래그먼트2 선언
+                solvingRegisterFragment.setArguments(result);//번들을 프래그먼트2로 보낼 준비
+                transaction.replace(R.id.add_problem_fragment_container, solvingRegisterFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
         });
 
