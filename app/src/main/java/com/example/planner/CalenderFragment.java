@@ -128,7 +128,7 @@ public class CalenderFragment extends Fragment {
                         for (int i = 0; i < reviewDay.size(); i++) {
                             if (reviewDay.get(i).equals(selectDay)) {
                                 try {
-                                    if (ox.get(i)) categories.add(new Category(document.getId(), "O"));
+                                    if (ox.get(i+1)) categories.add(new Category(document.getId(), "O"));
                                     else categories.add(new Category(document.getId(), "X"));
                                 } catch (IndexOutOfBoundsException e) {
                                     categories.add(new Category(document.getId(), "X"));
