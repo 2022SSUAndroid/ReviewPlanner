@@ -30,6 +30,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -57,6 +59,8 @@ public class SolvingProblemFragment extends Fragment {
     ProblemObj problemObj;
     String pi = "";
     String si = "";
+
+    FirebaseAuth mAuth;
 
     public SolvingProblemFragment() {
         // Required empty public constructor
@@ -106,8 +110,10 @@ public class SolvingProblemFragment extends Fragment {
         problemImg = view.findViewById(R.id.problem_image);
         solutionImg = view.findViewById(R.id.solution_image);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
         String uid = user.getUid();
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.document("user/" + uid + "/" + problemObj.getCategory() + "/" + problemObj.getProblemName()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -180,9 +186,16 @@ public class SolvingProblemFragment extends Fragment {
         incorrectBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                problemObj.addOX(false);
+
+                Bundle result = new Bundle();
+                result.putSerializable("bundlepro2", problemObj);
+
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 // 프래그먼트매니저를 통해 사용
                 ReviewAgainFragment reviewAgainFragment= new ReviewAgainFragment(); // 객체 생성
+                reviewAgainFragment.setArguments(result);
                 transaction.replace(R.id.new_fragment, reviewAgainFragment); //layout, 교체될 layout
                 transaction.addToBackStack(null);
                 transaction.commit();
@@ -194,13 +207,32 @@ public class SolvingProblemFragment extends Fragment {
 
     void showAlertDialog()
     {
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        String uid = user.getUid();
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setMessage("남은 복습 일정을 계속 진행하시겠습니까?");
         builder.setPositiveButton("O", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                // 그대로 저장
                 problemObj.addOX(true);
                 problemObj.getMySolving().add("");
+                HashMap<Object,Object> hashMap = new HashMap<>();
+
+                hashMap.put("category", problemObj.getCategory());
+                hashMap.put("cycle", problemObj.getCycle());
+                hashMap.put("mySolving", problemObj.getMySolving());
+                hashMap.put("ox", problemObj.getOX());
+                hashMap.put("problemImg", problemObj.getProblemImg());
+                hashMap.put("problemName", problemObj.getProblemName());
+                hashMap.put("reviewCnt", problemObj.getReviewCnt());
+                hashMap.put("reviewDay", problemObj.getReviewDay());
+                hashMap.put("reviewTag", problemObj.getReviewTag());
+                hashMap.put("solutionImg", problemObj.getSolutionImg());
+
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                db.document("user/" + uid + "/" + problemObj.getCategory() + "/" + problemObj.getProblemName()).set(hashMap);
 
                 Intent intent = new Intent(getContext(),MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -210,9 +242,31 @@ public class SolvingProblemFragment extends Fragment {
         builder.setNegativeButton("X", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
                 problemObj.addOX(true);
                 problemObj.getMySolving().add("");
-                problemObj.getReviewDay().clear();
+
+                List<String> tmp = new ArrayList<>();
+                for (int i = 0; i < problemObj.getReviewCnt(); i++) {
+                    tmp.add(problemObj.getReviewDay().get(i));
+                }
+                problemObj.setReviewDay(tmp);
+
+                HashMap<Object,Object> hashMap = new HashMap<>();
+
+                hashMap.put("category", problemObj.getCategory());
+                hashMap.put("cycle", problemObj.getCycle());
+                hashMap.put("mySolving", problemObj.getMySolving());
+                hashMap.put("ox", problemObj.getOX());
+                hashMap.put("problemImg", problemObj.getProblemImg());
+                hashMap.put("problemName", problemObj.getProblemName());
+                hashMap.put("reviewCnt", problemObj.getReviewCnt());
+                hashMap.put("reviewDay", problemObj.getReviewDay());
+                hashMap.put("reviewTag", problemObj.getReviewTag());
+                hashMap.put("solutionImg", problemObj.getSolutionImg());
+
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                db.document("user/" + uid + "/" + problemObj.getCategory() + "/" + problemObj.getProblemName()).set(hashMap);
 
                 Intent intent = new Intent(getContext(),MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
