@@ -78,11 +78,9 @@ public class ProblemListFragment extends Fragment {
                     DocumentSnapshot document = task.getResult();
                     Map<String, Object> map = document.getData();
 
-                    ProblemDto problemDto = new ProblemDto(map);
-
+                    ProblemObj problemObj = new ProblemObj(map);
                     Intent intent = new Intent(getContext(), SolvingProblem.class);
-
-                    intent.putExtra("problemDto", problemDto);
+                    intent.putExtra("problemObj", problemObj);
                     startActivity(intent);
 
                 }
