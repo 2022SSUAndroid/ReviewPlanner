@@ -70,7 +70,7 @@ public class Fragment1 extends Fragment {
                         ArrayList reviewDay = (ArrayList) document.getData().get("reviewDay");
                         ArrayList ox = (ArrayList) document.getData().get("ox");
 
-                        if (reviewDay.get(ox.size()).equals(today)) {
+                        if (reviewDay.get(ox.size() - 1).equals(today)) {
                             todayCount.getAndIncrement();
                             names.add(document.getId());
                         }
