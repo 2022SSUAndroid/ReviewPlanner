@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         //Title text 작성
-        actionBar.setTitle("text 입력");
+        actionBar.setTitle("REVIEW PLANNER");
         //뒤로가기 버튼 추가
         actionBar.setDisplayHomeAsUpEnabled(true);
 

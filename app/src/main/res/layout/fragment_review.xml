@@ -20,7 +20,7 @@
                 android:id="@+id/problem_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="> 뉴런 미적분 Theme3 5번"
+                android:text="> 오답 리뷰"
                 android:textSize="20dp"
                 android:textStyle="bold"/>
 <!--            <View-->

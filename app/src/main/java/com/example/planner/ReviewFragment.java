@@ -63,7 +63,6 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("dfdfdf", "onCreate");
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -85,6 +84,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
         Log.d("problemObj", "category : " + problemObj.getCategory());
         Log.d("problemObj", "name : " + problemObj.getProblemName());
         Log.d("problemObj", "cycle : " + problemObj.getCycle().toString());
+        Log.d("problemObj", "reviewDay : " + problemObj.getReviewDay().toString());
         Log.d("problemObj", "tag : " + problemObj.getReviewTag().toString());
         Log.d("problemObj", "problemImg : " + problemObj.getProblemImg());
 
@@ -103,9 +103,6 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
         if (view == btn_next) {
             List<String> reviewTagList = Arrays.asList(reviewTag.getText().toString());
             problemObj.setReviewTag(reviewTagList);
-
-            //Log 확인
-            Log.d("problemObj", "reviewTag : " + problemObj.getReviewTag());
 
             Bundle result = new Bundle();
             result.putSerializable("bundleKey3", problemObj);

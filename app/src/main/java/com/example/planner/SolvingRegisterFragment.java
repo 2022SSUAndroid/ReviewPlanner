@@ -173,12 +173,6 @@ public class SolvingRegisterFragment extends Fragment {
                 FirebaseUser user = mAuth.getCurrentUser();
                 String uid = user.getUid();
 
-                Log.d("problemObj", "category : " + problemObj.getCategory());
-                Log.d("problemObj", "name : " + problemObj.getProblemName());
-                Log.d("problemObj", "cycle : " + problemObj.getCycle().toString());
-                Log.d("problemObj", "tag : " + problemObj.getReviewTag().toString());
-                Log.d("problemObj", "problemImg : " + problemObj.getProblemImg());
-
                 // 파이어베이스에서 카테고리가 selectedCategory인 컬렉션에 들어가서 문제 해시맵<이름, 객체>로 가져오기
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 db.document("user/" + uid).get().addOnCompleteListener(task -> {
@@ -231,10 +225,6 @@ public class SolvingRegisterFragment extends Fragment {
                     problemObj.setSolutionImg(time);
 
 
-                //Log 확인
-                Log.d("problemObj", "solutionIMG : " + problemObj.getSolutionImg());
-
-
 
                 // Get a default Storage bucket
                 FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -282,6 +272,7 @@ public class SolvingRegisterFragment extends Fragment {
                 Log.d("problemObj", "cycle : " + problemObj.getCycle().toString());
                 Log.d("problemObj", "tag : " + problemObj.getReviewTag().toString());
                 Log.d("problemObj", "problemImg : " + problemObj.getProblemImg());
+                Log.d("problemObj", "solutionImg : " + problemObj.getSolutionImg());
 
                 // 파이어베이스에서 카테고리가 selectedCategory인 컬렉션에 들어가서 문제 해시맵<이름, 객체>로 가져오기
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -317,6 +308,7 @@ public class SolvingRegisterFragment extends Fragment {
 
                 db.document("user/" + uid + "/" + problemObj.getCategory() + "/" + problemObj.getProblemName()).set(hashMap);
 
+                Log.d("problemObj", "파이어베이스에 업로드 성공");
 
                 //NEXT VIEW
                 Intent intent = new Intent(getActivity(),MainActivity.class);

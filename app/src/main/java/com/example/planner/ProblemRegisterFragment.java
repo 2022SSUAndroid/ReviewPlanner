@@ -180,8 +180,13 @@ public class ProblemRegisterFragment extends Fragment  {
                 final String time = new SimpleDateFormat("yyyyMMddHHmmss", Locale.ENGLISH).format(now);
                 problemObj.setProblemImg(time);
 
-                //Log확인
-                Log.d("problemObj", "ProblemIMG : " + problemObj.getProblemImg());
+
+                Log.d("problemObj", "category : " + problemObj.getCategory());
+                Log.d("problemObj", "name : " + problemObj.getProblemName());
+                Log.d("problemObj", "cycle : " + problemObj.getCycle().toString());
+                Log.d("problemObj", "reviewDay : " + problemObj.getReviewDay().toString());
+                Log.d("problemObj", "tag : " + problemObj.getReviewTag().toString());
+                Log.d("problemObj", "problemImg : " + problemObj.getProblemImg());
 
 
 

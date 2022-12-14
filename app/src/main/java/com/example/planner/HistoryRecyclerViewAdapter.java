@@ -72,7 +72,12 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter {
             myViewHolder.textViewCnt.setText(position + "회차");
         }
 
-        myViewHolder.textViewTag.setText(reviewTag.get(position));
+        try{
+            myViewHolder.textViewTag.setText(reviewTag.get(position));
+        } catch (Exception e) {
+            return;
+        }
+
 
         if (ox.get(position) == true) {
             myViewHolder.imageView.setImageResource(R.drawable.history_o);
