@@ -2,8 +2,11 @@ package com.example.planner;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +26,7 @@ public class ReviewAgainFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    ProblemObj problemObj;
 
     public ReviewAgainFragment() {
         // Required empty public constructor
@@ -52,6 +56,7 @@ public class ReviewAgainFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+            problemObj = (ProblemObj) getArguments().getSerializable("bundlepro2");
         }
     }
 
@@ -60,5 +65,12 @@ public class ReviewAgainFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_review_again, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Log.v("name", problemObj.getProblemName());
+        Log.v("ox", problemObj.getOX().toString());
     }
 }

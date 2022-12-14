@@ -180,9 +180,16 @@ public class SolvingProblemFragment extends Fragment {
         incorrectBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                problemObj.addOX(false);
+
+                Bundle result = new Bundle();
+                result.putSerializable("bundlepro2", problemObj);
+
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 // 프래그먼트매니저를 통해 사용
                 ReviewAgainFragment reviewAgainFragment= new ReviewAgainFragment(); // 객체 생성
+                reviewAgainFragment.setArguments(result);
                 transaction.replace(R.id.new_fragment, reviewAgainFragment); //layout, 교체될 layout
                 transaction.addToBackStack(null);
                 transaction.commit();
