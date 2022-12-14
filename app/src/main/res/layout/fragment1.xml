@@ -9,7 +9,7 @@
         android:id="@+id/listView_custom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#fafafa"
+        android:background="@color/white"
         ></ListView>
 
 </FrameLayout>

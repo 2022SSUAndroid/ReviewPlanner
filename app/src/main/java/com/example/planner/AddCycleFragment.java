@@ -116,7 +116,7 @@ public class AddCycleFragment extends Fragment implements View.OnClickListener{
                 Toast.makeText(getActivity(), "복습주기를 선택하세요", Toast.LENGTH_SHORT).show();
                 return;
             }
-            List<String> reviewDay = problemObj.calculateReviewDay();
+            HashMap<String, Boolean> reviewDay = problemObj.makeReviewDayHashMap();
             problemObj.setReviewDay(reviewDay);
 
             Bundle result = new Bundle();

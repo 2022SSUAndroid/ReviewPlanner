@@ -95,8 +95,6 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
         btn_next.setOnClickListener(this);
 
 
-//        List<String> reviewTag = Arrays.asList(null);
-//        problemObj.setReviewTag(reviewTag);
 
     }
 
