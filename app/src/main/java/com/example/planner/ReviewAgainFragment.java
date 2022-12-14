@@ -94,13 +94,13 @@ public class ReviewAgainFragment extends Fragment {
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                problemObj.addReviewTag(reviewTag.toString());
+                problemObj.addReviewTag(reviewTag.getText().toString());
 
                 //Log 확인
                 Log.d("problemObj", "reviewTag : " + problemObj.getReviewTag());
 
                 Bundle result = new Bundle();
-                result.putSerializable("bundleKey3", problemObj);
+                result.putSerializable("bundlepro3", problemObj);
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 AddMySolvingImgFragment addMySolvingImgFragment = new AddMySolvingImgFragment();
                 addMySolvingImgFragment.setArguments(result);

@@ -1,9 +1,12 @@
 package com.example.planner;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -92,6 +95,7 @@ public class AddCycleAgainFragment extends Fragment implements View.OnClickListe
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        showAlertDialog();
         selectedView = view.findViewById(R.id.selected);
         cycle1View = view.findViewById(R.id.cycle1);
         cycle2View = view.findViewById(R.id.cycle2);
@@ -147,6 +151,9 @@ public class AddCycleAgainFragment extends Fragment implements View.OnClickListe
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.document("user/" + uid + "/" + problemObj.getCategory() + "/" + problemObj.getProblemName()).set(hashMap);
 
+            Intent intent = new Intent(getContext(),MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
 
         } else if (view == selectMyselfView) {
             DialogFragmentMyCycle dialog = new DialogFragmentMyCycle();
@@ -182,5 +189,51 @@ public class AddCycleAgainFragment extends Fragment implements View.OnClickListe
             List<Integer> cycle1 = Arrays.asList(0, 1, 3, 7, 14, 30);
             problemObj.setCycle(cycle1);
         }
+    }
+
+    void showAlertDialog()
+    {
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        String uid = user.getUid();
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("복습주기를 다시 설정하시겠습니까?");
+        builder.setPositiveButton("O", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // 그대로 저장
+                return;
+            }
+        });
+        builder.setNegativeButton("X", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                FirebaseUser user = mAuth.getCurrentUser();
+                String uid = user.getUid();
+
+                HashMap<Object,Object> hashMap = new HashMap<>();
+
+                hashMap.put("category", problemObj.getCategory());
+                hashMap.put("cycle", problemObj.getCycle());
+                hashMap.put("mySolving", problemObj.getMySolving());
+                hashMap.put("ox", problemObj.getOX());
+                hashMap.put("problemImg", problemObj.getProblemImg());
+                hashMap.put("problemName", problemObj.getProblemName());
+                hashMap.put("reviewCnt", problemObj.getReviewCnt());
+                hashMap.put("reviewDay", problemObj.getReviewDay());
+                hashMap.put("reviewTag", problemObj.getReviewTag());
+                hashMap.put("solutionImg", problemObj.getSolutionImg());
+
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                db.document("user/" + uid + "/" + problemObj.getCategory() + "/" + problemObj.getProblemName()).set(hashMap);
+
+                Intent intent = new Intent(getContext(),MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION|Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+
+            }
+        });
+        builder.show();
     }
 }

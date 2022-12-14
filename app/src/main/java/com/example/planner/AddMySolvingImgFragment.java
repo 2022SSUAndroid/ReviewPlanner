@@ -253,7 +253,7 @@ public class AddMySolvingImgFragment extends Fragment {
 
                 //NEXT VIEW
                 Bundle result = new Bundle();
-                result.putSerializable("bundleKey3", problemObj);
+                result.putSerializable("bundlebundle", problemObj);
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 AddCycleAgainFragment addCycleAgainFragment = new AddCycleAgainFragment();
                 addCycleAgainFragment.setArguments(result);
