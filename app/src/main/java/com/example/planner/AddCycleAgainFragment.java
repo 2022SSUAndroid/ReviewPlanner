@@ -117,8 +117,16 @@ public class AddCycleAgainFragment extends Fragment implements View.OnClickListe
                 Toast.makeText(getActivity(), "복습주기를 선택하세요", Toast.LENGTH_SHORT).show();
                 return;
             }
-            List<String> reviewDay = problemObj.calculateReviewDay();
-            problemObj.setReviewDay(reviewDay);
+            List<String> updatedReviewDay = new ArrayList<>();
+            List<String> previousReviewDay = problemObj.getReviewDay();
+            for (int i = 0; i < problemObj.getReviewCnt(); i++) {
+                updatedReviewDay.add(previousReviewDay.get(i));
+            }
+            List<String> newReviewDay = problemObj.calculateReviewDay();
+            for (int i = 0; i < newReviewDay.size(); i++) {
+                updatedReviewDay.add(newReviewDay.get(i));
+            }
+            problemObj.setReviewDay(updatedReviewDay);
 
             FirebaseUser user = mAuth.getCurrentUser();
             String uid = user.getUid();
